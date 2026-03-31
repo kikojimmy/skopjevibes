@@ -207,7 +207,7 @@
           date:       formatDate(d.datum, d.vreme),
           badge:      d.badge || '',
           desc:       d.desc || '',
-          link:       d.link || '#',
+          location:   d.location || '',
           artistIds:  d.artistIds || []
         };
       }).filter(n => n.den >= 0 && n.den <= 6); // само следните 7 дена
@@ -251,7 +251,9 @@
       ${artistRow}
     `;
     document.getElementById('sheet-badge-wrap').innerHTML = n.badge ? `<div class="sheet-badge">${n.badge}</div>` : '';
-    document.getElementById('sheet-btn').href = 'https://maps.google.com/?q=' + encodeURIComponent(n.place);
+    const btn = document.getElementById('sheet-btn');
+    if (n.location) { btn.href = n.location; btn.style.display = 'block'; }
+    else { btn.style.display = 'none'; }
     document.getElementById('overlay').classList.add('open');
     document.getElementById('sheet').classList.add('open');
     document.body.style.overflow = 'hidden';
