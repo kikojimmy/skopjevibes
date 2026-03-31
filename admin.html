@@ -88,6 +88,10 @@
     .delete-btn  { flex-shrink: 0; background: #2a0a0a; border: 1px solid #4a1a1a; color: #ff5c35; padding: 6px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; transition: background 0.15s; }
     .delete-btn:hover { background: #3a0a0a; }
     .empty-list { text-align: center; color: #444; font-size: 13px; padding: 24px 0; }
+
+    .artist-check-list { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 10px 14px; }
+    .artist-check-item { display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; }
+    .artist-check-item input[type="checkbox"] { accent-color: #ff5c35; width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -154,6 +158,13 @@
   <div class="form-group">
     <label>Слика (URL)</label>
     <input type="url" id="f-image-url" placeholder="https://..." />
+  </div>
+
+  <div class="form-group">
+    <label>Артисти</label>
+    <div class="artist-check-list" id="f-artists-check">
+      <span style="font-size:13px;color:#444;">Нема додадени артисти</span>
+    </div>
   </div>
 
   <div class="form-group">
@@ -268,6 +279,7 @@
       buildDateDropdowns(new Date());
       loadEventsList();
       loadArtistsList();
+      populateArtistCheckboxes();
     } else {
       document.getElementById('login-error').style.display = 'block';
     }
@@ -290,6 +302,7 @@
     const desc       = document.getElementById('f-desc').value.trim();
     const link       = document.getElementById('f-link').value.trim() || '#';
     const imgSrc     = document.getElementById('f-image-url').value.trim();
+    const artistIds  = Array.from(document.querySelectorAll('#f-artists-check input[type="checkbox"]:checked')).map(cb => cb.value);
 
     if (!title || !place || !datum) {
       document.getElementById('error-msg').style.display   = 'block';
@@ -304,7 +317,7 @@
     try {
       await db.collection('nastani').add({
         title, place, kategorija, imgEmoji: emoji, imgSrc,
-        datum, vreme, badge, desc, link,
+        datum, vreme, badge, desc, link, artistIds,
         createdAt: new Date().toISOString()
       });
 
@@ -318,6 +331,7 @@
       document.getElementById('f-link').value  = '';
       document.getElementById('f-vreme').value = '';
       document.getElementById('f-image-url').value = '';
+      document.querySelectorAll('#f-artists-check input[type="checkbox"]').forEach(cb => cb.checked = false);
       buildDateDropdowns(new Date());
       loadEventsList();
     } catch (err) {
@@ -352,6 +366,21 @@
       }).join('');
     } catch (err) {
       listEl.innerHTML = '<div class="empty-list">Грешка при вчитување</div>';
+    }
+  }
+
+  async function populateArtistCheckboxes() {
+    const wrap = document.getElementById('f-artists-check');
+    try {
+      const snap = await db.collection('artists').orderBy('name').get();
+      if (snap.empty) { wrap.innerHTML = '<span style="font-size:13px;color:#444;">Нема додадени артисти</span>'; return; }
+      wrap.innerHTML = snap.docs.map(d => {
+        const a = d.data();
+        const label = a.nickname ? `${a.nickname} (${a.name})` : a.name;
+        return `<label class="artist-check-item"><input type="checkbox" value="${d.id}" />${label}</label>`;
+      }).join('');
+    } catch (err) {
+      wrap.innerHTML = '<span style="font-size:13px;color:#444;">Грешка при вчитување</span>';
     }
   }
 

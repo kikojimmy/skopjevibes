@@ -177,15 +177,20 @@
   const now      = new Date();
   const todayStr = now.toISOString().split('T')[0]; // "2025-03-30"
 
-  let nastani   = [];
-  let activeCat = 'site';
-  let activeDay = 0;
+  let nastani    = [];
+  let activeCat  = 'site';
+  let activeDay  = 0;
+  let artistsMap = {};
 
   // ── Load from Firestore ──
   async function loadNastani() {
     try {
-      const q    = query(collection(db, 'nastani'), orderBy('datum'));
-      const snap = await getDocs(q);
+      const [eventsSnap, artistsSnap] = await Promise.all([
+        getDocs(query(collection(db, 'nastani'), orderBy('datum'))),
+        getDocs(collection(db, 'artists'))
+      ]);
+      artistsSnap.docs.forEach(doc => { artistsMap[doc.id] = doc.data(); });
+      const snap = eventsSnap;
       nastani    = snap.docs.map(doc => {
         const d   = doc.data();
         const den = daysBetween(todayStr, d.datum);
@@ -202,7 +207,8 @@
           date:       formatDate(d.datum, d.vreme),
           badge:      d.badge || '',
           desc:       d.desc || '',
-          link:       d.link || '#'
+          link:       d.link || '#',
+          artistIds:  d.artistIds || []
         };
       }).filter(n => n.den >= 0 && n.den <= 6); // само следните 7 дена
 
@@ -235,9 +241,14 @@
     document.getElementById('sheet-cat').textContent   = n.cat;
     document.getElementById('sheet-title').textContent = n.title;
     document.getElementById('sheet-desc').textContent  = n.desc;
-    document.getElementById('sheet-meta').innerHTML    = `
+    const performers = n.artistIds.map(id => artistsMap[id]).filter(Boolean);
+    const artistRow  = performers.length
+      ? `<div class="sheet-meta-row"><span>🎤</span><span>${performers.map(a => a.nickname || a.name).join(', ')}</span></div>`
+      : '';
+    document.getElementById('sheet-meta').innerHTML = `
       <div class="sheet-meta-row"><span>📍</span><span>${n.place}</span></div>
       <div class="sheet-meta-row"><span>🕐</span><span>${n.date}</span></div>
+      ${artistRow}
     `;
     document.getElementById('sheet-badge-wrap').innerHTML = n.badge ? `<div class="sheet-badge">${n.badge}</div>` : '';
     document.getElementById('sheet-btn').href = n.link;
