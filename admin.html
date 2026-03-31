@@ -76,6 +76,9 @@
     .success-msg { background: #0a2a0a; border: 1px solid #1a4a1a; color: #4cff91; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-top: 14px; display: none; text-align: center; }
     .error-msg   { background: #2a0a0a; border: 1px solid #4a1a1a; color: #ff5c35; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-top: 14px; display: none; text-align: center; }
 
+    /* Divider */
+    .section-divider { border: none; border-top: 1px solid #1f1f1f; margin: 36px 0; }
+
     /* Events list */
     .events-section { margin-top: 36px; }
     .event-item { background: #161616; border: 1px solid #1f1f1f; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -177,6 +180,31 @@
     <div class="section-title">Постоечки настани</div>
     <div id="events-list"><div class="empty-list">Вчитување...</div></div>
   </div>
+
+  <hr class="section-divider" />
+
+  <!-- ARTISTS SECTION -->
+  <div class="section-title">+ Додај артист</div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Име</label>
+      <input type="text" id="a-name" placeholder="пр. Marko Nastic" />
+    </div>
+    <div class="form-group">
+      <label>Прекар / DJ Name</label>
+      <input type="text" id="a-nickname" placeholder="пр. DJ Marko" />
+    </div>
+  </div>
+
+  <button class="submit-btn" id="artist-btn" onclick="addArtist()">Додај артист</button>
+  <div class="success-msg" id="artist-success-msg">✅ Артистот е додаден!</div>
+  <div class="error-msg"   id="artist-error-msg">❌ Грешка. Внеси барем едно поле.</div>
+
+  <div class="events-section">
+    <div class="section-title">Артисти</div>
+    <div id="artists-list"><div class="empty-list">Вчитување...</div></div>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -239,6 +267,7 @@
       document.getElementById('admin-panel').style.display  = 'block';
       buildDateDropdowns(new Date());
       loadEventsList();
+      loadArtistsList();
     } else {
       document.getElementById('login-error').style.display = 'block';
     }
@@ -323,6 +352,72 @@
       }).join('');
     } catch (err) {
       listEl.innerHTML = '<div class="empty-list">Грешка при вчитување</div>';
+    }
+  }
+
+  async function addArtist() {
+    const name     = document.getElementById('a-name').value.trim();
+    const nickname = document.getElementById('a-nickname').value.trim();
+
+    if (!name && !nickname) {
+      document.getElementById('artist-error-msg').style.display   = 'block';
+      document.getElementById('artist-success-msg').style.display = 'none';
+      return;
+    }
+
+    const btn = document.getElementById('artist-btn');
+    btn.disabled    = true;
+    btn.textContent = 'Зачувување...';
+
+    try {
+      await db.collection('artists').add({ name, nickname, createdAt: new Date().toISOString() });
+      document.getElementById('artist-success-msg').style.display = 'block';
+      document.getElementById('artist-error-msg').style.display   = 'none';
+      document.getElementById('a-name').value     = '';
+      document.getElementById('a-nickname').value = '';
+      loadArtistsList();
+    } catch (err) {
+      document.getElementById('artist-error-msg').style.display   = 'block';
+      document.getElementById('artist-success-msg').style.display = 'none';
+      console.error(err);
+    }
+
+    btn.disabled    = false;
+    btn.textContent = 'Додај артист';
+  }
+
+  async function loadArtistsList() {
+    const listEl = document.getElementById('artists-list');
+    try {
+      const snap = await db.collection('artists').orderBy('name').get();
+      if (snap.empty) {
+        listEl.innerHTML = '<div class="empty-list">Нема артисти</div>';
+        return;
+      }
+      listEl.innerHTML = snap.docs.map(d => {
+        const a = d.data();
+        return `
+          <div class="event-item">
+            <div class="event-info">
+              <div class="event-title">${a.name || a.nickname}</div>
+              <div class="event-meta">${a.nickname ? 'Прекар: ' + a.nickname : ''}</div>
+            </div>
+            <button class="delete-btn" onclick="deleteArtist('${d.id}')">Избриши</button>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      listEl.innerHTML = '<div class="empty-list">Грешка при вчитување</div>';
+    }
+  }
+
+  async function deleteArtist(id) {
+    if (!confirm('Сигурен си дека сакаш да го избришеш артистот?')) return;
+    try {
+      await db.collection('artists').doc(id).delete();
+      loadArtistsList();
+    } catch (err) {
+      alert('Грешка при бришење');
     }
   }
 
