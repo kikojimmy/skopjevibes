@@ -149,11 +149,8 @@
   </div>
 
   <div class="form-group">
-    <label>Слика на настанот</label>
-    <div class="file-input-wrap">
-      <div class="file-input-label" id="file-label">📷 Избери слика...</div>
-      <input type="file" id="f-image" accept="image/*" onchange="updateFileLabel(this)" />
-    </div>
+    <label>Слика (URL)</label>
+    <input type="url" id="f-image-url" placeholder="https://..." />
   </div>
 
   <div class="form-group">
@@ -263,7 +260,7 @@
     const badge      = document.getElementById('f-badge').value.trim();
     const desc       = document.getElementById('f-desc').value.trim();
     const link       = document.getElementById('f-link').value.trim() || '#';
-    const imageFile  = document.getElementById('f-image').files[0];
+    const imgSrc     = document.getElementById('f-image-url').value.trim();
 
     if (!title || !place || !datum) {
       document.getElementById('error-msg').style.display   = 'block';
@@ -276,14 +273,6 @@
     btn.textContent = 'Зачувување...';
 
     try {
-      let imgSrc = '';
-      if (imageFile) {
-        btn.textContent = 'Прикачување слика...';
-        const ref = storage.ref('events/' + Date.now() + '_' + imageFile.name);
-        await ref.put(imageFile);
-        imgSrc = await ref.getDownloadURL();
-      }
-
       await db.collection('nastani').add({
         title, place, kategorija, imgEmoji: emoji, imgSrc,
         datum, vreme, badge, desc, link,
@@ -299,9 +288,7 @@
       document.getElementById('f-desc').value  = '';
       document.getElementById('f-link').value  = '';
       document.getElementById('f-vreme').value = '';
-      document.getElementById('f-image').value = '';
-      document.getElementById('file-label').textContent = '📷 Избери слика...';
-      document.getElementById('file-label').classList.remove('has-file');
+      document.getElementById('f-image-url').value = '';
       buildDateDropdowns(new Date());
       loadEventsList();
     } catch (err) {
