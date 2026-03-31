@@ -145,7 +145,7 @@
     <div class="sheet-meta" id="sheet-meta"></div>
     <div class="sheet-desc" id="sheet-desc"></div>
     <div id="sheet-badge-wrap"></div>
-    <a class="sheet-btn" id="sheet-btn" target="_blank">Повеќе информации →</a>
+    <a class="sheet-btn" id="sheet-btn" target="_blank">Локација →</a>
   </div>
 </div>
 
@@ -251,7 +251,7 @@
       ${artistRow}
     `;
     document.getElementById('sheet-badge-wrap').innerHTML = n.badge ? `<div class="sheet-badge">${n.badge}</div>` : '';
-    document.getElementById('sheet-btn').href = n.link;
+    document.getElementById('sheet-btn').href = 'https://maps.google.com/?q=' + encodeURIComponent(n.place);
     document.getElementById('overlay').classList.add('open');
     document.getElementById('sheet').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -305,7 +305,7 @@
     const grid     = document.getElementById('grid');
     const filtered = nastani.map((n, i) => ({ ...n, _idx: i })).filter(n => {
       const catOk = cat === 'site' || n.kategorija === cat;
-      const dayOk = n.den === activeDay;
+      const dayOk = cat === 'site' || n.den === activeDay;
       return catOk && dayOk;
     });
     if (filtered.length === 0) {

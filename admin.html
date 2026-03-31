@@ -76,9 +76,6 @@
     .success-msg { background: #0a2a0a; border: 1px solid #1a4a1a; color: #4cff91; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-top: 14px; display: none; text-align: center; }
     .error-msg   { background: #2a0a0a; border: 1px solid #4a1a1a; color: #ff5c35; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-top: 14px; display: none; text-align: center; }
 
-    /* Divider */
-    .section-divider { border: none; border-top: 1px solid #1f1f1f; margin: 36px 0; }
-
     /* Events list */
     .events-section { margin-top: 36px; }
     .event-item { background: #161616; border: 1px solid #1f1f1f; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -89,9 +86,6 @@
     .delete-btn:hover { background: #3a0a0a; }
     .empty-list { text-align: center; color: #444; font-size: 13px; padding: 24px 0; }
 
-    .artist-check-list { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 10px 14px; }
-    .artist-check-item { display: flex; align-items: center; gap: 10px; font-size: 13px; cursor: pointer; }
-    .artist-check-item input[type="checkbox"] { accent-color: #ff5c35; width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -161,13 +155,6 @@
   </div>
 
   <div class="form-group">
-    <label>Артисти</label>
-    <div class="artist-check-list" id="f-artists-check">
-      <span style="font-size:13px;color:#444;">Нема додадени артисти</span>
-    </div>
-  </div>
-
-  <div class="form-group">
     <label>Badge (цена, промоција...)</label>
     <input type="text" id="f-badge" placeholder="пр. Free Entry до 24h · или остави празно" />
   </div>
@@ -175,11 +162,6 @@
   <div class="form-group">
     <label>Опис</label>
     <textarea id="f-desc" placeholder="Краток опис на настанот..."></textarea>
-  </div>
-
-  <div class="form-group">
-    <label>Линк (Facebook, website...)</label>
-    <input type="url" id="f-link" placeholder="https://facebook.com/event/..." />
   </div>
 
   <button class="submit-btn" id="submit-btn" onclick="addNastan()">Додај настан</button>
@@ -192,36 +174,10 @@
     <div id="events-list"><div class="empty-list">Вчитување...</div></div>
   </div>
 
-  <hr class="section-divider" />
-
-  <!-- ARTISTS SECTION -->
-  <div class="section-title">+ Додај артист</div>
-
-  <div class="form-row">
-    <div class="form-group">
-      <label>Име</label>
-      <input type="text" id="a-name" placeholder="пр. Marko Nastic" />
-    </div>
-    <div class="form-group">
-      <label>Прекар / DJ Name</label>
-      <input type="text" id="a-nickname" placeholder="пр. DJ Marko" />
-    </div>
-  </div>
-
-  <button class="submit-btn" id="artist-btn" onclick="addArtist()">Додај артист</button>
-  <div class="success-msg" id="artist-success-msg">✅ Артистот е додаден!</div>
-  <div class="error-msg"   id="artist-error-msg">❌ Грешка. Внеси барем едно поле.</div>
-
-  <div class="events-section">
-    <div class="section-title">Артисти</div>
-    <div id="artists-list"><div class="empty-list">Вчитување...</div></div>
-  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
@@ -234,8 +190,7 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const db      = firebase.firestore();
-  const storage = firebase.storage();
+  const db = firebase.firestore();
 
   const ADMIN_PASSWORD = "skopjevibes2025";
   const MK_MONTHS = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
@@ -278,8 +233,6 @@
       document.getElementById('admin-panel').style.display  = 'block';
       buildDateDropdowns(new Date());
       loadEventsList();
-      loadArtistsList();
-      populateArtistCheckboxes();
     } else {
       document.getElementById('login-error').style.display = 'block';
     }
@@ -300,10 +253,7 @@
     const vreme      = document.getElementById('f-vreme').value.trim() || '20:00';
     const badge      = document.getElementById('f-badge').value.trim();
     const desc       = document.getElementById('f-desc').value.trim();
-    const link       = document.getElementById('f-link').value.trim() || '#';
     const imgSrc     = document.getElementById('f-image-url').value.trim();
-    const artistIds  = Array.from(document.querySelectorAll('#f-artists-check input[type="checkbox"]:checked')).map(cb => cb.value);
-
     if (!title || !place || !datum) {
       document.getElementById('error-msg').style.display   = 'block';
       document.getElementById('success-msg').style.display = 'none';
@@ -317,7 +267,7 @@
     try {
       await db.collection('nastani').add({
         title, place, kategorija, imgEmoji: emoji, imgSrc,
-        datum, vreme, badge, desc, link, artistIds,
+        datum, vreme, badge, desc,
         createdAt: new Date().toISOString()
       });
 
@@ -328,10 +278,8 @@
       document.getElementById('f-emoji').value = '';
       document.getElementById('f-badge').value = '';
       document.getElementById('f-desc').value  = '';
-      document.getElementById('f-link').value  = '';
       document.getElementById('f-vreme').value = '';
       document.getElementById('f-image-url').value = '';
-      document.querySelectorAll('#f-artists-check input[type="checkbox"]').forEach(cb => cb.checked = false);
       buildDateDropdowns(new Date());
       loadEventsList();
     } catch (err) {
@@ -366,87 +314,6 @@
       }).join('');
     } catch (err) {
       listEl.innerHTML = '<div class="empty-list">Грешка при вчитување</div>';
-    }
-  }
-
-  async function populateArtistCheckboxes() {
-    const wrap = document.getElementById('f-artists-check');
-    try {
-      const snap = await db.collection('artists').orderBy('name').get();
-      if (snap.empty) { wrap.innerHTML = '<span style="font-size:13px;color:#444;">Нема додадени артисти</span>'; return; }
-      wrap.innerHTML = snap.docs.map(d => {
-        const a = d.data();
-        const label = a.nickname ? `${a.nickname} (${a.name})` : a.name;
-        return `<label class="artist-check-item"><input type="checkbox" value="${d.id}" />${label}</label>`;
-      }).join('');
-    } catch (err) {
-      wrap.innerHTML = '<span style="font-size:13px;color:#444;">Грешка при вчитување</span>';
-    }
-  }
-
-  async function addArtist() {
-    const name     = document.getElementById('a-name').value.trim();
-    const nickname = document.getElementById('a-nickname').value.trim();
-
-    if (!name && !nickname) {
-      document.getElementById('artist-error-msg').style.display   = 'block';
-      document.getElementById('artist-success-msg').style.display = 'none';
-      return;
-    }
-
-    const btn = document.getElementById('artist-btn');
-    btn.disabled    = true;
-    btn.textContent = 'Зачувување...';
-
-    try {
-      await db.collection('artists').add({ name, nickname, createdAt: new Date().toISOString() });
-      document.getElementById('artist-success-msg').style.display = 'block';
-      document.getElementById('artist-error-msg').style.display   = 'none';
-      document.getElementById('a-name').value     = '';
-      document.getElementById('a-nickname').value = '';
-      loadArtistsList();
-    } catch (err) {
-      document.getElementById('artist-error-msg').style.display   = 'block';
-      document.getElementById('artist-success-msg').style.display = 'none';
-      console.error(err);
-    }
-
-    btn.disabled    = false;
-    btn.textContent = 'Додај артист';
-  }
-
-  async function loadArtistsList() {
-    const listEl = document.getElementById('artists-list');
-    try {
-      const snap = await db.collection('artists').orderBy('name').get();
-      if (snap.empty) {
-        listEl.innerHTML = '<div class="empty-list">Нема артисти</div>';
-        return;
-      }
-      listEl.innerHTML = snap.docs.map(d => {
-        const a = d.data();
-        return `
-          <div class="event-item">
-            <div class="event-info">
-              <div class="event-title">${a.name || a.nickname}</div>
-              <div class="event-meta">${a.nickname ? 'Прекар: ' + a.nickname : ''}</div>
-            </div>
-            <button class="delete-btn" onclick="deleteArtist('${d.id}')">Избриши</button>
-          </div>
-        `;
-      }).join('');
-    } catch (err) {
-      listEl.innerHTML = '<div class="empty-list">Грешка при вчитување</div>';
-    }
-  }
-
-  async function deleteArtist(id) {
-    if (!confirm('Сигурен си дека сакаш да го избришеш артистот?')) return;
-    try {
-      await db.collection('artists').doc(id).delete();
-      loadArtistsList();
-    } catch (err) {
-      alert('Грешка при бришење');
     }
   }
 
