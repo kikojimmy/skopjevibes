@@ -48,6 +48,13 @@
     .form-group textarea { resize: vertical; min-height: 80px; }
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .date-row { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px; }
+
+    .file-input-wrap { position: relative; }
+    .file-input-wrap input[type="file"] { opacity: 0; position: absolute; inset: 0; cursor: pointer; }
+    .file-input-label { display: flex; align-items: center; gap: 8px; background: #161616; border: 1px dashed #2a2a2a; color: #666; padding: 11px 14px; border-radius: 12px; font-size: 14px; cursor: pointer; transition: border-color 0.15s; }
+    .file-input-label:hover { border-color: #ff5c35; color: #aaa; }
+    .file-input-label.has-file { border-color: #ff5c35; color: #f5f0e8; }
 
     .submit-btn {
       width: 100%;
@@ -127,14 +134,25 @@
     </div>
   </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label>Датум</label>
-      <input type="date" id="f-datum" />
+  <div class="form-group">
+    <label>Датум</label>
+    <div class="date-row">
+      <select id="f-day"></select>
+      <select id="f-month"></select>
+      <select id="f-year"></select>
     </div>
-    <div class="form-group">
-      <label>Време</label>
-      <input type="time" id="f-vreme" placeholder="23:00" />
+  </div>
+
+  <div class="form-group">
+    <label>Време</label>
+    <input type="text" id="f-vreme" placeholder="20:00" />
+  </div>
+
+  <div class="form-group">
+    <label>Слика на настанот</label>
+    <div class="file-input-wrap">
+      <div class="file-input-label" id="file-label">📷 Избери слика...</div>
+      <input type="file" id="f-image" accept="image/*" onchange="updateFileLabel(this)" />
     </div>
   </div>
 
@@ -166,6 +184,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
   const firebaseConfig = {
@@ -179,16 +198,49 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const db      = firebase.firestore();
+  const storage = firebase.storage();
 
   const ADMIN_PASSWORD = "skopjevibes2025";
+  const MK_MONTHS = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
+
+  function buildDateDropdowns(date) {
+    const dayEl   = document.getElementById('f-day');
+    const monthEl = document.getElementById('f-month');
+    const yearEl  = document.getElementById('f-year');
+    dayEl.innerHTML   = Array.from({length:31}, (_,i) => `<option value="${String(i+1).padStart(2,'0')}">${i+1}</option>`).join('');
+    monthEl.innerHTML = MK_MONTHS.map((m,i) => `<option value="${String(i+1).padStart(2,'0')}">${m}</option>`).join('');
+    const curYear = date.getFullYear();
+    yearEl.innerHTML  = [curYear, curYear+1].map(y => `<option value="${y}">${y}</option>`).join('');
+    dayEl.value   = String(date.getDate()).padStart(2,'0');
+    monthEl.value = String(date.getMonth()+1).padStart(2,'0');
+    yearEl.value  = String(curYear);
+  }
+
+  function getDateValue() {
+    const d = document.getElementById('f-day').value;
+    const m = document.getElementById('f-month').value;
+    const y = document.getElementById('f-year').value;
+    return `${y}-${m}-${d}`;
+  }
+
+  function updateFileLabel(input) {
+    const label = document.getElementById('file-label');
+    if (input.files && input.files[0]) {
+      label.textContent = '📷 ' + input.files[0].name;
+      label.classList.add('has-file');
+    } else {
+      label.textContent = '📷 Избери слика...';
+      label.classList.remove('has-file');
+    }
+  }
 
   function checkLogin() {
     const pwd = document.getElementById('pwd-input').value;
     if (pwd === ADMIN_PASSWORD) {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-panel').style.display  = 'block';
-      document.getElementById('f-datum').value = new Date().toISOString().split('T')[0];
+      buildDateDropdowns(new Date());
       loadEventsList();
     } else {
       document.getElementById('login-error').style.display = 'block';
@@ -206,11 +258,12 @@
     const place      = document.getElementById('f-place').value.trim();
     const kategorija = document.getElementById('f-kategorija').value;
     const emoji      = document.getElementById('f-emoji').value.trim() || '🎉';
-    const datum      = document.getElementById('f-datum').value;
-    const vreme      = document.getElementById('f-vreme').value || '21:00';
+    const datum      = getDateValue();
+    const vreme      = document.getElementById('f-vreme').value.trim() || '20:00';
     const badge      = document.getElementById('f-badge').value.trim();
     const desc       = document.getElementById('f-desc').value.trim();
     const link       = document.getElementById('f-link').value.trim() || '#';
+    const imageFile  = document.getElementById('f-image').files[0];
 
     if (!title || !place || !datum) {
       document.getElementById('error-msg').style.display   = 'block';
@@ -223,8 +276,16 @@
     btn.textContent = 'Зачувување...';
 
     try {
+      let imgSrc = '';
+      if (imageFile) {
+        btn.textContent = 'Прикачување слика...';
+        const ref = storage.ref('events/' + Date.now() + '_' + imageFile.name);
+        await ref.put(imageFile);
+        imgSrc = await ref.getDownloadURL();
+      }
+
       await db.collection('nastani').add({
-        title, place, kategorija, imgEmoji: emoji,
+        title, place, kategorija, imgEmoji: emoji, imgSrc,
         datum, vreme, badge, desc, link,
         createdAt: new Date().toISOString()
       });
@@ -237,7 +298,11 @@
       document.getElementById('f-badge').value = '';
       document.getElementById('f-desc').value  = '';
       document.getElementById('f-link').value  = '';
-      document.getElementById('f-datum').value = new Date().toISOString().split('T')[0];
+      document.getElementById('f-vreme').value = '';
+      document.getElementById('f-image').value = '';
+      document.getElementById('file-label').textContent = '📷 Избери слика...';
+      document.getElementById('file-label').classList.remove('has-file');
+      buildDateDropdowns(new Date());
       loadEventsList();
     } catch (err) {
       document.getElementById('error-msg').style.display   = 'block';
