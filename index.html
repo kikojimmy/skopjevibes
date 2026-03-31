@@ -237,7 +237,7 @@
     const n   = nastani[idx];
     const img = document.getElementById('sheet-img');
     img.className = 'sheet-img ' + n.imgClass;
-    img.innerHTML = n.imgSrc ? `<img src="${n.imgSrc}" alt="${n.title}" />` : n.imgEmoji;
+    img.innerHTML = n.imgSrc ? `<img src="${n.imgSrc}" alt="${n.title}" onerror="imgError(this,'${n.imgEmoji}')" />` : n.imgEmoji;
     document.getElementById('sheet-cat').textContent   = n.cat;
     document.getElementById('sheet-title').textContent = n.title;
     document.getElementById('sheet-desc').textContent  = n.desc;
@@ -259,6 +259,7 @@
     document.body.style.overflow = 'hidden';
   }
   window.openSheet = openSheet;
+  window.imgError  = (el, emoji) => { el.parentElement.innerHTML = emoji; };
 
   function closeSheet() {
     document.getElementById('overlay').classList.remove('open');
@@ -317,7 +318,7 @@
     grid.innerHTML = filtered.map(n => `
       <div class="card" onclick="openSheet(${n._idx})">
         <div class="card-img ${n.imgClass}">
-          ${n.imgSrc ? `<img src="${n.imgSrc}" alt="${n.title}" />` : n.imgEmoji}
+          ${n.imgSrc ? `<img src="${n.imgSrc}" alt="${n.title}" onerror="imgError(this,'${n.imgEmoji}')" />` : n.imgEmoji}
         </div>
         <div class="card-body">
           <div class="card-cat">${n.cat}</div>
