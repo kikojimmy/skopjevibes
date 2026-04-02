@@ -54,6 +54,7 @@
     .club-bg    { background: linear-gradient(135deg, #1a0a2e, #2d1b4e); }
     .concert-bg { background: linear-gradient(135deg, #0a1a2e, #1b2d4e); }
     .bar-bg     { background: linear-gradient(135deg, #1a1a0a, #3a2d10); }
+    .kafana-bg  { background: linear-gradient(135deg, #1a0f00, #3d2500); }
     .sport-bg   { background: linear-gradient(135deg, #0a1a0a, #1b3a1b); }
     .kultura-bg { background: linear-gradient(135deg, #2e0a1a, #4e1b2d); }
     .card-body { padding: 8px 10px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
@@ -114,11 +115,11 @@
 
   <div class="filters">
     <div class="chip active" onclick="window.filterCat(this,'site')">🎉 Сите</div>
-    <div class="chip" onclick="window.filterCat(this,'klub')">🎧 Клуб</div>
-    <div class="chip" onclick="window.filterCat(this,'koncert')">🎵 Концерт</div>
     <div class="chip" onclick="window.filterCat(this,'bar')">🍹 Бар</div>
-    <div class="chip" onclick="window.filterCat(this,'sport')">⚽ Спорт</div>
-    <div class="chip" onclick="window.filterCat(this,'kultura')">🎭 Култура</div>
+    <div class="chip" onclick="window.filterCat(this,'kafana')">🍺 Кафана</div>
+    <div class="chip" onclick="window.filterCat(this,'koncert')">🎵 Концерт</div>
+    <div class="chip" onclick="window.filterCat(this,'klub')">🎧 Клуб</div>
+    <div class="chip" onclick="window.filterCat(this,'sport-kultura')">⚽ Спорт и Култура</div>
   </div>
 
   <div class="days-wrap" id="days-wrap">
@@ -167,8 +168,9 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  const imgClassMap = { klub: 'club-bg', koncert: 'concert-bg', bar: 'bar-bg', sport: 'sport-bg', kultura: 'kultura-bg' };
-  const catMap      = { klub: 'Клуб', koncert: 'Концерт', bar: 'Бар', sport: 'Спорт', kultura: 'Култура' };
+  const imgClassMap  = { klub: 'club-bg', koncert: 'concert-bg', bar: 'bar-bg', kafana: 'kafana-bg', sport: 'sport-bg', kultura: 'kultura-bg', 'sport-kultura': 'sport-bg' };
+  const catMap       = { klub: 'Клуб', koncert: 'Концерт', bar: 'Бар', kafana: 'Кафана', sport: 'Спорт и Култура', kultura: 'Спорт и Култура', 'sport-kultura': 'Спорт и Култура' };
+  const catEmojiMap  = { klub: '🎧', koncert: '🎵', bar: '🍹', kafana: '🍺', sport: '⚽', kultura: '🎭', 'sport-kultura': '⚽' };
 
   const dayNames = ['Недела','Понеделник','Вторник','Среда','Четврток','Петок','Сабота'];
   const dayShort = ['Нед','Пон','Вто','Сре','Чет','Пет','Саб'];
@@ -200,7 +202,7 @@
           kategorija: d.kategorija,
           imgClass:   imgClassMap[d.kategorija] || 'club-bg',
           imgSrc:     d.imgSrc || '',
-          imgEmoji:   d.imgEmoji || '🎉',
+          imgEmoji:   catEmojiMap[d.kategorija] || d.imgEmoji || '🎉',
           cat:        catMap[d.kategorija] || d.kategorija,
           title:      d.title,
           place:      d.place,
@@ -307,7 +309,8 @@
     updateLabel();
     const grid     = document.getElementById('grid');
     const filtered = nastani.map((n, i) => ({ ...n, _idx: i })).filter(n => {
-      const catOk = cat === 'site' || n.kategorija === cat;
+      const catOk = cat === 'site' ||
+                  (cat === 'sport-kultura' ? ['sport','kultura','sport-kultura'].includes(n.kategorija) : n.kategorija === cat);
       const dayOk = cat === 'site' || n.den === activeDay;
       return catOk && dayOk;
     });
