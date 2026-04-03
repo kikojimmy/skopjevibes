@@ -84,6 +84,11 @@
     .event-meta  { font-size: 11px; color: #555; margin-top: 2px; }
     .delete-btn  { flex-shrink: 0; background: #2a0a0a; border: 1px solid #4a1a1a; color: #ff5c35; padding: 6px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; transition: background 0.15s; }
     .delete-btn:hover { background: #3a0a0a; }
+    .edit-btn    { flex-shrink: 0; background: #0a1a2a; border: 1px solid #1a3a5a; color: #5599ff; padding: 6px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; transition: background 0.15s; }
+    .edit-btn:hover { background: #0f2540; }
+    .event-actions { display: flex; gap: 6px; }
+    .cancel-btn  { width: 100%; background: none; border: 1px solid #2a2a2a; color: #888; border-radius: 14px; padding: 12px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 8px; transition: border-color 0.15s; display: none; }
+    .cancel-btn:hover { border-color: #555; color: #f5f0e8; }
     .empty-list { text-align: center; color: #444; font-size: 13px; padding: 24px 0; }
 
   </style>
@@ -106,7 +111,7 @@
   </div>
 
   <!-- ADD EVENT FORM -->
-  <div class="section-title">+ Додај настан</div>
+  <div class="section-title" id="form-title">+ Додај настан</div>
 
   <div class="form-group">
     <label>Наслов на настанот</label>
@@ -169,8 +174,9 @@
     <textarea id="f-desc" placeholder="Краток опис на настанот..."></textarea>
   </div>
 
-  <button class="submit-btn" id="submit-btn" onclick="addNastan()">Додај настан</button>
-  <div class="success-msg" id="success-msg">✅ Настанот е додаден!</div>
+  <button class="submit-btn" id="submit-btn" onclick="saveNastan()">Додај настан</button>
+  <button class="cancel-btn" id="cancel-btn" onclick="cancelEdit()">Откажи</button>
+  <div class="success-msg" id="success-msg">✅ Зачувано!</div>
   <div class="error-msg"   id="error-msg">❌ Грешка. Провери ги полињата.</div>
 
   <!-- EVENTS LIST -->
@@ -198,6 +204,7 @@
   const db = firebase.firestore();
 
   const ADMIN_PASSWORD = "skopjevibes2025";
+  let editingId = null;
   const MK_MONTHS = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 
   function buildDateDropdowns(date) {
@@ -249,7 +256,51 @@
     document.getElementById('pwd-input').value = '';
   }
 
-  async function addNastan() {
+  function editNastan(id, n) {
+    editingId = id;
+    document.getElementById('form-title').textContent = '✏️ Уреди настан';
+    document.getElementById('submit-btn').textContent = 'Зачувај промени';
+    document.getElementById('cancel-btn').style.display = 'block';
+    document.getElementById('success-msg').style.display = 'none';
+    document.getElementById('error-msg').style.display   = 'none';
+
+    document.getElementById('f-title').value     = n.title || '';
+    document.getElementById('f-place').value     = n.place || '';
+    document.getElementById('f-kategorija').value = n.kategorija || 'klub';
+    document.getElementById('f-emoji').value     = n.imgEmoji || '';
+    document.getElementById('f-vreme').value     = n.vreme || '';
+    document.getElementById('f-image-url').value = n.imgSrc || '';
+    document.getElementById('f-location').value  = n.location || '';
+    document.getElementById('f-badge').value     = n.badge || '';
+    document.getElementById('f-desc').value      = n.desc || '';
+
+    if (n.datum) {
+      const eventDate = new Date(n.datum + 'T00:00:00');
+      buildDateDropdowns(eventDate);
+    }
+
+    document.getElementById('form-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function cancelEdit() {
+    editingId = null;
+    document.getElementById('form-title').textContent = '+ Додај настан';
+    document.getElementById('submit-btn').textContent = 'Додај настан';
+    document.getElementById('cancel-btn').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'none';
+    document.getElementById('error-msg').style.display   = 'none';
+    document.getElementById('f-title').value     = '';
+    document.getElementById('f-place').value     = '';
+    document.getElementById('f-emoji').value     = '';
+    document.getElementById('f-badge').value     = '';
+    document.getElementById('f-desc').value      = '';
+    document.getElementById('f-vreme').value     = '';
+    document.getElementById('f-image-url').value = '';
+    document.getElementById('f-location').value  = '';
+    buildDateDropdowns(new Date());
+  }
+
+  async function saveNastan() {
     const title      = document.getElementById('f-title').value.trim();
     const place      = document.getElementById('f-place').value.trim();
     const kategorija = document.getElementById('f-kategorija').value;
@@ -271,23 +322,16 @@
     btn.textContent = 'Зачувување...';
 
     try {
-      await db.collection('nastani').add({
-        title, place, kategorija, imgEmoji: emoji, imgSrc,
-        datum, vreme, badge, desc, location,
-        createdAt: new Date().toISOString()
-      });
+      const data = { title, place, kategorija, imgEmoji: emoji, imgSrc, datum, vreme, badge, desc, location };
+      if (editingId) {
+        await db.collection('nastani').doc(editingId).update(data);
+      } else {
+        await db.collection('nastani').add({ ...data, createdAt: new Date().toISOString() });
+      }
 
       document.getElementById('success-msg').style.display = 'block';
       document.getElementById('error-msg').style.display   = 'none';
-      document.getElementById('f-title').value = '';
-      document.getElementById('f-place').value = '';
-      document.getElementById('f-emoji').value = '';
-      document.getElementById('f-badge').value = '';
-      document.getElementById('f-desc').value  = '';
-      document.getElementById('f-vreme').value    = '';
-      document.getElementById('f-image-url').value = '';
-      document.getElementById('f-location').value  = '';
-      buildDateDropdowns(new Date());
+      cancelEdit();
       loadEventsList();
     } catch (err) {
       document.getElementById('error-msg').style.display   = 'block';
@@ -296,7 +340,7 @@
     }
 
     btn.disabled    = false;
-    btn.textContent = 'Додај настан';
+    btn.textContent = editingId ? 'Зачувај промени' : 'Додај настан';
   }
 
   async function loadEventsList() {
@@ -309,13 +353,17 @@
       }
       listEl.innerHTML = snap.docs.map(d => {
         const n = d.data();
+        const safe = encodeURIComponent(JSON.stringify(n));
         return `
           <div class="event-item">
             <div class="event-info">
-              <div class="event-title">${n.imgEmoji} ${n.title}</div>
+              <div class="event-title">${n.imgEmoji || ''} ${n.title}</div>
               <div class="event-meta">${n.place} · ${n.datum} · ${n.vreme}</div>
             </div>
-            <button class="delete-btn" onclick="deleteNastan('${d.id}')">Избриши</button>
+            <div class="event-actions">
+              <button class="edit-btn"   onclick="editNastan('${d.id}', JSON.parse(decodeURIComponent('${safe}')))">Уреди</button>
+              <button class="delete-btn" onclick="deleteNastan('${d.id}')">Избриши</button>
+            </div>
           </div>
         `;
       }).join('');
