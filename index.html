@@ -77,8 +77,8 @@
     .sheet.open { transform: translateY(0); }
     .sheet-handle { width: 36px; height: 4px; background: #333; border-radius: 2px; margin: 12px auto 0; }
     @media (min-width: 600px) {
-      .sheet { top: 50%; left: 50%; right: auto; bottom: auto; transform: translate(-50%, -40%); width: 100%; max-width: 480px; max-height: 90vh; border-radius: 22px; border: 1px solid #2a2a2a; }
-      .sheet.open { transform: translate(-50%, -50%); }
+      .sheet { top: 50%; left: 50%; right: auto; bottom: auto; transform: translate(-50%, -45%); width: 100%; max-width: 480px; max-height: 90vh; border-radius: 22px; border: 1px solid #2a2a2a; opacity: 0; pointer-events: none; transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease; }
+      .sheet.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: all; }
       .sheet-handle { display: none; }
       .sheet-img { height: 280px !important; min-height: 280px; }
       .sheet-img img { height: 280px !important; object-fit: cover; }
