@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkopjeVibes — Instagram Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; font-family: 'DM Sans', sans-serif; color: #fff; padding: 40px 20px; }
+
+  h1 { font-family: 'Syne', sans-serif; font-size: 28px; color: #ff5c2b; margin-bottom: 8px; }
+  .subtitle { color: #555; font-size: 14px; margin-bottom: 40px; }
+
+  .editor { background: #1a1a1a; border-radius: 16px; padding: 28px; margin-bottom: 40px; }
+  .editor h2 { font-family: 'Syne', sans-serif; font-size: 16px; color: #ff5c2b; margin-bottom: 20px; letter-spacing: 1px; }
+
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+  input, select { background: #111; border: 1px solid #333; border-radius: 8px; padding: 10px 14px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+  input:focus, select:focus { border-color: #ff5c2b; }
+  select option { background: #111; }
+
+  .preview-area { display: flex; justify-content: center; margin-bottom: 20px; }
+
+  /* Preview is 540x540 — download renders at 2x = 1080x1080 */
+  .post { width: 540px; height: 540px; position: relative; overflow: hidden; flex-shrink: 0; }
+
+  /* Template 1 */
+  .t1 { background: #0d0d0d; }
+  .t1 .cat-badge { position: absolute; top: 28px; left: 28px; background: #ff5c2b; padding: 7px 16px; border-radius: 6px; }
+  .t1 .cat-badge span { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+  .t1 .title { position: absolute; top: 100px; left: 28px; right: 28px; font-family: 'Syne', sans-serif; font-size: 58px; font-weight: 800; color: #fff; line-height: 1.0; }
+  .t1 .bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 18px 28px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+  .t1 .location { font-size: 13px; color: #777; }
+  .t1 .brand { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #ff5c2b; }
+  .t1 .accent-line { position: absolute; right: 0; top: 0; width: 4px; height: 100%; background: #ff5c2b; }
+
+  /* Template 2 */
+  .t2 { background: #0d0d0d; padding: 28px; }
+  .t2 .header { margin-bottom: 20px; }
+  .t2 .header .week-label { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: #ff5c2b; letter-spacing: 3px; margin-bottom: 4px; }
+  .t2 .header .big-title { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: #fff; line-height: 1.0; }
+  .t2 .event-list { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .t2 .event-item { background: #1a1a1a; border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #ff5c2b; }
+  .t2 .event-name { font-family: 'DM Sans', sans-serif; font-size: 15px; color: #fff; font-weight: 500; }
+  .t2 .event-meta { font-family: 'DM Sans', sans-serif; font-size: 12px; color: #555; text-align: right; }
+  .t2 .footer { margin-top: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .t2 .brand { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #ff5c2b; }
+  .t2 .url { font-size: 11px; color: #444; letter-spacing: 1px; }
+
+  /* Template 3 */
+  .t3 { background: #0d0d0d; display: flex; align-items: center; justify-content: center; }
+  .t3 .inner { text-align: center; }
+  .t3 .line { width: 2px; height: 60px; background: #ff5c2b; margin: 0 auto 24px; }
+  .t3 .line.bottom { margin: 24px auto 28px; }
+  .t3 .big { font-family: 'Syne', sans-serif; font-size: 72px; font-weight: 800; color: #fff; line-height: 1.0; }
+  .t3 .big span { color: #ff5c2b; }
+  .t3 .date-box { display: inline-block; border: 1px solid #333; padding: 8px 24px; border-radius: 40px; font-size: 13px; color: #666; letter-spacing: 2px; margin-bottom: 8px; }
+  .t3 .url { font-size: 11px; color: #444; letter-spacing: 3px; }
+
+  .download-btn { display: block; width: 100%; padding: 14px; background: #ff5c2b; border: none; border-radius: 10px; color: #fff; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; letter-spacing: 1px; }
+  .download-btn:hover { opacity: 0.85; }
+  .download-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .divider { border: none; border-top: 1px solid #222; margin: 40px 0; }
+</style>
+</head>
+<body>
+
+<h1>SkopjeVibes</h1>
+<p class="subtitle">Instagram темплејти — уреди и симни (1080×1080px)</p>
+
+<!-- TEMPLATE 1 -->
+<div class="editor">
+  <h2>ТЕМПЛЕЈТ 1 — НАСТАН НА ДЕНОТ</h2>
+  <div class="fields">
+    <div class="field full">
+      <label>Наслов на настанот</label>
+      <input type="text" id="t1-title" value="Live Music at Public Room" oninput="updateT1()">
+    </div>
+    <div class="field">
+      <label>Категорија</label>
+      <select id="t1-cat" onchange="updateT1()">
+        <option>Бар</option>
+        <option>Клуб</option>
+        <option>Концерт</option>
+        <option>Кафана</option>
+        <option>Спорт и Култура</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Ден</label>
+      <select id="t1-day" onchange="updateT1()">
+        <option>Понеделник</option>
+        <option>Вторник</option>
+        <option>Среда</option>
+        <option>Четврток</option>
+        <option selected>Петок</option>
+        <option>Сабота</option>
+        <option>Недела</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Локација</label>
+      <input type="text" id="t1-loc" value="Public Room" oninput="updateT1()">
+    </div>
+    <div class="field">
+      <label>Време</label>
+      <input type="text" id="t1-time" value="21:00" oninput="updateT1()">
+    </div>
+  </div>
+  <div class="preview-area">
+    <div class="post t1" id="post1">
+      <div class="accent-line"></div>
+      <div class="cat-badge"><span id="p1-cat">Бар · Петок</span></div>
+      <div class="title" id="p1-title">Live Music at Public Room</div>
+      <div class="bottom">
+        <span class="location" id="p1-loc">📍 Public Room · 21:00</span>
+        <span class="brand">SkopjeVibes</span>
+      </div>
+    </div>
+  </div>
+  <button class="download-btn" id="dl1" onclick="download('post1', 'dl1', 'skopjevibes-nastan.png')">⬇ Симни слика (1080×1080)</button>
+</div>
+
+<!-- TEMPLATE 2 -->
+<div class="editor">
+  <h2>ТЕМПЛЕЈТ 2 — ВИКЕНД PREVIEW</h2>
+  <div class="fields">
+    <div class="field full"><label>Наслов 1</label><input type="text" id="t2-n1" value="Забава со маски" oninput="updateT2()"></div>
+    <div class="field"><label>Место 1</label><input type="text" id="t2-l1" value="Martini Caffe" oninput="updateT2()"></div>
+    <div class="field"><label>Ден · Време 1</label><input type="text" id="t2-d1" value="Саб · 22:00" oninput="updateT2()"></div>
+    <div class="field full"><label>Наслов 2</label><input type="text" id="t2-n2" value="DJ Night" oninput="updateT2()"></div>
+    <div class="field"><label>Место 2</label><input type="text" id="t2-l2" value="The One" oninput="updateT2()"></div>
+    <div class="field"><label>Ден · Време 2</label><input type="text" id="t2-d2" value="Саб · 23:00" oninput="updateT2()"></div>
+    <div class="field full"><label>Наслов 3</label><input type="text" id="t2-n3" value="Live Jazz" oninput="updateT2()"></div>
+    <div class="field"><label>Место 3</label><input type="text" id="t2-l3" value="Public Room" oninput="updateT2()"></div>
+    <div class="field"><label>Ден · Време 3</label><input type="text" id="t2-d3" value="Нед · 20:00" oninput="updateT2()"></div>
+  </div>
+  <div class="preview-area">
+    <div class="post t2" id="post2">
+      <div class="header">
+        <div class="week-label">ОВОЈ ВИКЕНД</div>
+        <div class="big-title">Вечерва<br>во Скопје</div>
+      </div>
+      <div class="event-list">
+        <div class="event-item">
+          <div>
+            <div class="event-name" id="p2-n1">Забава со маски</div>
+            <div class="event-meta" style="text-align:left;margin-top:2px;font-size:11px;color:#555;" id="p2-l1">Martini Caffe</div>
+          </div>
+          <div class="event-meta" id="p2-d1">Саб · 22:00</div>
+        </div>
+        <div class="event-item">
+          <div>
+            <div class="event-name" id="p2-n2">DJ Night</div>
+            <div class="event-meta" style="text-align:left;margin-top:2px;font-size:11px;color:#555;" id="p2-l2">The One</div>
+          </div>
+          <div class="event-meta" id="p2-d2">Саб · 23:00</div>
+        </div>
+        <div class="event-item">
+          <div>
+            <div class="event-name" id="p2-n3">Live Jazz</div>
+            <div class="event-meta" style="text-align:left;margin-top:2px;font-size:11px;color:#555;" id="p2-l3">Public Room</div>
+          </div>
+          <div class="event-meta" id="p2-d3">Нед · 20:00</div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="brand">SkopjeVibes</div>
+        <div class="url">skopjevibes.vercel.app</div>
+      </div>
+    </div>
+  </div>
+  <button class="download-btn" id="dl2" onclick="download('post2', 'dl2', 'skopjevibes-vikend.png')">⬇ Симни слика (1080×1080)</button>
+</div>
+
+<!-- TEMPLATE 3 -->
+<div class="editor">
+  <h2>ТЕМПЛЕЈТ 3 — МИНИМАЛ</h2>
+  <div class="fields">
+    <div class="field">
+      <label>Датум (пр. Петок, 4 Април)</label>
+      <input type="text" id="t3-date" value="Петок, 4 Април" oninput="updateT3()">
+    </div>
+    <div class="field">
+      <label>Порака (пр. Вечерва)</label>
+      <input type="text" id="t3-msg" value="Вечерва" oninput="updateT3()">
+    </div>
+  </div>
+  <div class="preview-area">
+    <div class="post t3" id="post3">
+      <div class="inner">
+        <div class="line"></div>
+        <div class="big"><span id="p3-msg">Вечерва</span><br><span>во Скопје</span></div>
+        <div class="line bottom"></div>
+        <div class="date-box" id="p3-date">Петок, 4 Април</div><br>
+        <div class="url">SKOPJEVIBES.VERCEL.APP</div>
+      </div>
+    </div>
+  </div>
+  <button class="download-btn" id="dl3" onclick="download('post3', 'dl3', 'skopjevibes-minimal.png')">⬇ Симни слика (1080×1080)</button>
+</div>
+
+<script>
+function updateT1() {
+  const title = document.getElementById('t1-title').value;
+  const cat   = document.getElementById('t1-cat').value;
+  const day   = document.getElementById('t1-day').value;
+  const loc   = document.getElementById('t1-loc').value;
+  const time  = document.getElementById('t1-time').value;
+  document.getElementById('p1-title').textContent = title;
+  document.getElementById('p1-cat').textContent   = cat + ' · ' + day;
+  document.getElementById('p1-loc').textContent   = '📍 ' + loc + ' · ' + time;
+}
+
+function updateT2() {
+  ['1','2','3'].forEach(i => {
+    document.getElementById('p2-n'+i).textContent = document.getElementById('t2-n'+i).value;
+    document.getElementById('p2-l'+i).textContent = document.getElementById('t2-l'+i).value;
+    document.getElementById('p2-d'+i).textContent = document.getElementById('t2-d'+i).value;
+  });
+}
+
+function updateT3() {
+  document.getElementById('p3-msg').textContent  = document.getElementById('t3-msg').value;
+  document.getElementById('p3-date').textContent = document.getElementById('t3-date').value;
+}
+
+async function download(postId, btnId, filename) {
+  const el  = document.getElementById(postId);
+  const btn = document.getElementById(btnId);
+
+  btn.disabled    = true;
+  btn.textContent = 'Генерирање...';
+
+  // Wait for fonts to be ready
+  await document.fonts.ready;
+
+  try {
+    const canvas = await html2canvas(el, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: '#0d0d0d',
+      logging: false,
+      width:  540,
+      height: 540
+    });
+
+    // Ensure output is exactly 1080x1080
+    const out = document.createElement('canvas');
+    out.width  = 1080;
+    out.height = 1080;
+    out.getContext('2d').drawImage(canvas, 0, 0, 1080, 1080);
+
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = out.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error(err);
+    alert('Грешка при генерирање. Обиди се повторно.');
+  }
+
+  btn.disabled    = false;
+  btn.textContent = '⬇ Симни слика (1080×1080)';
+}
+</script>
+</body>
+</html>
