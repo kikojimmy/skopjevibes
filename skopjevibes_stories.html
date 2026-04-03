@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkopjeVibes — Story Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; font-family: 'DM Sans', sans-serif; color: #fff; padding: 40px 20px; }
+  h1 { font-family: 'Syne', sans-serif; font-size: 28px; color: #ff5c2b; margin-bottom: 8px; }
+  .subtitle { color: #555; font-size: 14px; margin-bottom: 40px; }
+  .editor { background: #1a1a1a; border-radius: 16px; padding: 28px; margin-bottom: 40px; }
+  .editor h2 { font-family: 'Syne', sans-serif; font-size: 16px; color: #ff5c2b; margin-bottom: 20px; letter-spacing: 1px; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+  input, select { background: #111; border: 1px solid #333; border-radius: 8px; padding: 10px 14px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+  input:focus, select:focus { border-color: #ff5c2b; }
+  .preview-area { display: flex; justify-content: center; margin-bottom: 20px; }
+  
+  /* Story size 405x720 (9:16 scaled down) */
+  .story { width: 405px; height: 720px; position: relative; overflow: hidden; flex-shrink: 0; background: #0d0d0d; }
+
+  /* Story 1 — Настан */
+  .s1 .top-brand { position: absolute; top: 28px; left: 28px; right: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .s1 .brand { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #ff5c2b; }
+  .s1 .date-pill { background: #1a1a1a; padding: 5px 14px; border-radius: 20px; font-size: 12px; color: #888; }
+  .s1 .cat-badge { position: absolute; top: 90px; left: 28px; background: #ff5c2b; padding: 7px 16px; border-radius: 6px; }
+  .s1 .cat-badge span { font-size: 11px; font-weight: 600; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+  .s1 .title { position: absolute; top: 150px; left: 28px; right: 28px; font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; color: #fff; line-height: 1.0; }
+  .s1 .info-block { position: absolute; bottom: 120px; left: 28px; right: 28px; }
+  .s1 .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .s1 .info-icon { width: 32px; height: 32px; background: #1a1a1a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .s1 .info-text { font-size: 15px; color: #ccc; }
+  .s1 .swipe-up { position: absolute; bottom: 40px; left: 28px; right: 28px; text-align: center; }
+  .s1 .swipe-up .arrow { font-size: 20px; color: #ff5c2b; margin-bottom: 4px; }
+  .s1 .swipe-up .url { font-size: 12px; color: #555; letter-spacing: 2px; }
+  .s1 .accent-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: #ff5c2b; }
+
+  /* Story 2 — Poll */
+  .s2 .top-brand { position: absolute; top: 28px; left: 28px; right: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .s2 .brand { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #ff5c2b; }
+  .s2 .center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; padding: 0 28px; text-align: center; }
+  .s2 .question { font-family: 'Syne', sans-serif; font-size: 42px; font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 40px; }
+  .s2 .question span { color: #ff5c2b; }
+  .s2 .poll { display: flex; gap: 14px; }
+  .s2 .poll-opt { flex: 1; padding: 18px 10px; border-radius: 12px; text-align: center; font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; }
+  .s2 .poll-yes { background: #ff5c2b; color: #fff; }
+  .s2 .poll-no { background: #1a1a1a; color: #666; border: 1px solid #333; }
+  .s2 .accent-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: #ff5c2b; }
+
+  /* Story 3 — Викенд листа */
+  .s3 .top { position: absolute; top: 28px; left: 28px; right: 28px; }
+  .s3 .brand { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #ff5c2b; margin-bottom: 20px; }
+  .s3 .week-label { font-size: 11px; color: #555; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+  .s3 .big-title { font-family: 'Syne', sans-serif; font-size: 44px; font-weight: 800; color: #fff; line-height: 1.0; }
+  .s3 .list { position: absolute; top: 220px; left: 28px; right: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .s3 .item { background: #1a1a1a; border-radius: 12px; padding: 16px 18px; border-left: 3px solid #ff5c2b; }
+  .s3 .item-num { font-size: 11px; color: #ff5c2b; font-weight: 600; letter-spacing: 1px; margin-bottom: 4px; }
+  .s3 .item-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: #fff; }
+  .s3 .item-meta { font-size: 12px; color: #555; margin-top: 3px; }
+  .s3 .bottom { position: absolute; bottom: 40px; left: 28px; right: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .s3 .url { font-size: 11px; color: #444; letter-spacing: 2px; }
+  .s3 .accent-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: #ff5c2b; }
+
+  .download-btn { display: block; width: 100%; padding: 14px; background: #ff5c2b; border: none; border-radius: 10px; color: #fff; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; letter-spacing: 1px; }
+  .download-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<h1>SkopjeVibes</h1>
+<p class="subtitle">Instagram Stories темплејти — уреди и симни</p>
+
+<!-- STORY 1 — Настан -->
+<div class="editor">
+  <h2>STORY 1 — НАСТАН НА ДЕНОТ</h2>
+  <div class="fields">
+    <div class="field full"><label>Наслов</label><input type="text" id="s1-title" value="Live Music at Public Room" oninput="updateS1()"></div>
+    <div class="field"><label>Категорија</label>
+      <select id="s1-cat" onchange="updateS1()">
+        <option>Бар</option><option>Клуб</option><option>Концерт</option><option>Спорт</option><option>Култура</option>
+      </select>
+    </div>
+    <div class="field"><label>Датум</label><input type="text" id="s1-date" value="Петок, 4 Април" oninput="updateS1()"></div>
+    <div class="field"><label>Локација</label><input type="text" id="s1-loc" value="Public Room" oninput="updateS1()"></div>
+    <div class="field"><label>Време</label><input type="text" id="s1-time" value="21:00" oninput="updateS1()"></div>
+    <div class="field"><label>Влезница</label><input type="text" id="s1-price" value="Влез: 300 ден" oninput="updateS1()"></div>
+  </div>
+  <div class="preview-area">
+    <div class="story s1" id="story1">
+      <div class="top-brand">
+        <span class="brand">SkopjeVibes</span>
+        <span class="date-pill" id="sp1-date">Петок, 4 Април</span>
+      </div>
+      <div class="cat-badge"><span id="sp1-cat">Бар</span></div>
+      <div class="title" id="sp1-title">Live Music at Public Room</div>
+      <div class="info-block">
+        <div class="info-row">
+          <div class="info-icon">📍</div>
+          <span class="info-text" id="sp1-loc">Public Room</span>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">🕘</div>
+          <span class="info-text" id="sp1-time">21:00</span>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">🎟</div>
+          <span class="info-text" id="sp1-price">Влез: 300 ден</span>
+        </div>
+      </div>
+      <div class="swipe-up">
+        <div class="arrow">↑</div>
+        <div class="url">skopjevibes.vercel.app</div>
+      </div>
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+  <button class="download-btn" onclick="download('story1', 'skopjevibes-story-nastan.png')">⬇ Симни Story</button>
+</div>
+
+<!-- STORY 2 — Poll -->
+<div class="editor">
+  <h2>STORY 2 — ПРАШАЊЕ / POLL</h2>
+  <div class="fields">
+    <div class="field full"><label>Прашање</label><input type="text" id="s2-q" value="Излегувате вечерва?" oninput="updateS2()"></div>
+    <div class="field"><label>Опција ДА</label><input type="text" id="s2-yes" value="ДА 🔥" oninput="updateS2()"></div>
+    <div class="field"><label>Опција НЕ</label><input type="text" id="s2-no" value="НЕ 😴" oninput="updateS2()"></div>
+  </div>
+  <div class="preview-area">
+    <div class="story s2" id="story2">
+      <div class="top-brand">
+        <span class="brand">SkopjeVibes</span>
+      </div>
+      <div class="center">
+        <div class="question" id="sp2-q">Излегувате <span>вечерва?</span></div>
+        <div class="poll">
+          <div class="poll-opt poll-yes" id="sp2-yes">ДА 🔥</div>
+          <div class="poll-opt poll-no" id="sp2-no">НЕ 😴</div>
+        </div>
+      </div>
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+  <button class="download-btn" onclick="download('story2', 'skopjevibes-story-poll.png')">⬇ Симни Story</button>
+</div>
+
+<!-- STORY 3 — Викенд листа -->
+<div class="editor">
+  <h2>STORY 3 — ВИКЕНД ЛИСТА</h2>
+  <div class="fields">
+    <div class="field full"><label>Наслов 1</label><input type="text" id="s3-n1" value="Забава со маски" oninput="updateS3()"></div>
+    <div class="field"><label>Место 1</label><input type="text" id="s3-l1" value="Martini Caffe" oninput="updateS3()"></div>
+    <div class="field"><label>Ден · Време 1</label><input type="text" id="s3-d1" value="Саб · 22:00" oninput="updateS3()"></div>
+    <div class="field full"><label>Наслов 2</label><input type="text" id="s3-n2" value="DJ Night" oninput="updateS3()"></div>
+    <div class="field"><label>Место 2</label><input type="text" id="s3-l2" value="The One" oninput="updateS3()"></div>
+    <div class="field"><label>Ден · Време 2</label><input type="text" id="s3-d2" value="Саб · 23:00" oninput="updateS3()"></div>
+    <div class="field full"><label>Наслов 3</label><input type="text" id="s3-n3" value="Live Jazz" oninput="updateS3()"></div>
+    <div class="field"><label>Место 3</label><input type="text" id="s3-l3" value="Public Room" oninput="updateS3()"></div>
+    <div class="field"><label>Ден · Време 3</label><input type="text" id="s3-d3" value="Нед · 20:00" oninput="updateS3()"></div>
+  </div>
+  <div class="preview-area">
+    <div class="story s3" id="story3">
+      <div class="top">
+        <div class="brand">SkopjeVibes</div>
+        <div class="week-label">ОВОЈ ВИКЕНД</div>
+        <div class="big-title">Топ 3<br>настани</div>
+      </div>
+      <div class="list">
+        <div class="item">
+          <div class="item-num">01</div>
+          <div class="item-name" id="sp3-n1">Забава со маски</div>
+          <div class="item-meta" id="sp3-m1">Martini Caffe · Саб · 22:00</div>
+        </div>
+        <div class="item">
+          <div class="item-num">02</div>
+          <div class="item-name" id="sp3-n2">DJ Night</div>
+          <div class="item-meta" id="sp3-m2">The One · Саб · 23:00</div>
+        </div>
+        <div class="item">
+          <div class="item-num">03</div>
+          <div class="item-name" id="sp3-n3">Live Jazz</div>
+          <div class="item-meta" id="sp3-m3">Public Room · Нед · 20:00</div>
+        </div>
+      </div>
+      <div class="bottom">
+        <span class="brand" style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#ff5c2b;">SkopjeVibes</span>
+        <span class="url">skopjevibes.vercel.app</span>
+      </div>
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+  <button class="download-btn" onclick="download('story3', 'skopjevibes-story-vikend.png')">⬇ Симни Story</button>
+</div>
+
+<script>
+function updateS1() {
+  document.getElementById('sp1-title').textContent = document.getElementById('s1-title').value;
+  document.getElementById('sp1-cat').textContent = document.getElementById('s1-cat').value;
+  document.getElementById('sp1-date').textContent = document.getElementById('s1-date').value;
+  document.getElementById('sp1-loc').textContent = document.getElementById('s1-loc').value;
+  document.getElementById('sp1-time').textContent = document.getElementById('s1-time').value;
+  document.getElementById('sp1-price').textContent = document.getElementById('s1-price').value;
+}
+function updateS2() {
+  document.getElementById('sp2-q').innerHTML = document.getElementById('s2-q').value;
+  document.getElementById('sp2-yes').textContent = document.getElementById('s2-yes').value;
+  document.getElementById('sp2-no').textContent = document.getElementById('s2-no').value;
+}
+function updateS3() {
+  ['1','2','3'].forEach(i => {
+    document.getElementById('sp3-n'+i).textContent = document.getElementById('s3-n'+i).value;
+    document.getElementById('sp3-m'+i).textContent = document.getElementById('s3-l'+i).value + ' · ' + document.getElementById('s3-d'+i).value;
+  });
+}
+function download(id, filename) {
+  const el = document.getElementById(id);
+  html2canvas(el, { scale: 2, backgroundColor: '#0d0d0d', useCORS: true }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+}
+</script>
+</body>
+</html>
