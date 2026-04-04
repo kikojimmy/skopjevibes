@@ -36,6 +36,7 @@
   .t1 .title { position: absolute; top: 100px; left: 28px; right: 28px; font-family: 'Syne', sans-serif; font-size: 58px; font-weight: 800; color: #fff; line-height: 1.0; }
   .t1 .bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 18px 28px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
   .t1 .location { font-size: 13px; color: #777; }
+  .t1 .phone { font-size: 13px; color: #555; }
   .t1 .brand { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #ff5c2b; }
   .t1 .accent-line { position: absolute; right: 0; top: 0; width: 4px; height: 100%; background: #ff5c2b; }
 
@@ -112,6 +113,10 @@
       <label>Време</label>
       <input type="text" id="t1-time" value="21:00" oninput="updateT1()">
     </div>
+    <div class="field">
+      <label>Контакт / Телефон</label>
+      <input type="text" id="t1-phone" value="070 123 456" oninput="updateT1()">
+    </div>
   </div>
   <div class="preview-area">
     <div class="post t1" id="post1">
@@ -120,6 +125,7 @@
       <div class="title" id="p1-title">Live Music at Public Room</div>
       <div class="bottom">
         <span class="location" id="p1-loc">📍 Public Room · 21:00</span>
+        <span class="phone" id="p1-phone">📞 070 123 456</span>
         <span class="brand">SkopjeVibes</span>
       </div>
     </div>
@@ -134,12 +140,15 @@
     <div class="field full"><label>Наслов 1</label><input type="text" id="t2-n1" value="Забава со маски" oninput="updateT2()"></div>
     <div class="field"><label>Место 1</label><input type="text" id="t2-l1" value="Martini Caffe" oninput="updateT2()"></div>
     <div class="field"><label>Ден · Време 1</label><input type="text" id="t2-d1" value="Саб · 22:00" oninput="updateT2()"></div>
+    <div class="field"><label>Контакт 1</label><input type="text" id="t2-p1" value="070 123 456" oninput="updateT2()"></div>
     <div class="field full"><label>Наслов 2</label><input type="text" id="t2-n2" value="DJ Night" oninput="updateT2()"></div>
     <div class="field"><label>Место 2</label><input type="text" id="t2-l2" value="The One" oninput="updateT2()"></div>
     <div class="field"><label>Ден · Време 2</label><input type="text" id="t2-d2" value="Саб · 23:00" oninput="updateT2()"></div>
+    <div class="field"><label>Контакт 2</label><input type="text" id="t2-p2" value="070 123 456" oninput="updateT2()"></div>
     <div class="field full"><label>Наслов 3</label><input type="text" id="t2-n3" value="Live Jazz" oninput="updateT2()"></div>
     <div class="field"><label>Место 3</label><input type="text" id="t2-l3" value="Public Room" oninput="updateT2()"></div>
     <div class="field"><label>Ден · Време 3</label><input type="text" id="t2-d3" value="Нед · 20:00" oninput="updateT2()"></div>
+    <div class="field"><label>Контакт 3</label><input type="text" id="t2-p3" value="070 123 456" oninput="updateT2()"></div>
   </div>
   <div class="preview-area">
     <div class="post t2" id="post2">
@@ -153,21 +162,30 @@
             <div class="event-name" id="p2-n1">Забава со маски</div>
             <div class="event-meta" style="text-align:left;margin-top:2px;font-size:11px;color:#555;" id="p2-l1">Martini Caffe</div>
           </div>
-          <div class="event-meta" id="p2-d1">Саб · 22:00</div>
+          <div style="text-align:right;">
+            <div class="event-meta" id="p2-d1">Саб · 22:00</div>
+            <div class="event-meta" style="font-size:11px;color:#555;margin-top:2px;" id="p2-p1">📞 070 123 456</div>
+          </div>
         </div>
         <div class="event-item">
           <div>
             <div class="event-name" id="p2-n2">DJ Night</div>
             <div class="event-meta" style="text-align:left;margin-top:2px;font-size:11px;color:#555;" id="p2-l2">The One</div>
           </div>
-          <div class="event-meta" id="p2-d2">Саб · 23:00</div>
+          <div style="text-align:right;">
+            <div class="event-meta" id="p2-d2">Саб · 23:00</div>
+            <div class="event-meta" style="font-size:11px;color:#555;margin-top:2px;" id="p2-p2">📞 070 123 456</div>
+          </div>
         </div>
         <div class="event-item">
           <div>
             <div class="event-name" id="p2-n3">Live Jazz</div>
             <div class="event-meta" style="text-align:left;margin-top:2px;font-size:11px;color:#555;" id="p2-l3">Public Room</div>
           </div>
-          <div class="event-meta" id="p2-d3">Нед · 20:00</div>
+          <div style="text-align:right;">
+            <div class="event-meta" id="p2-d3">Нед · 20:00</div>
+            <div class="event-meta" style="font-size:11px;color:#555;margin-top:2px;" id="p2-p3">📞 070 123 456</div>
+          </div>
         </div>
       </div>
       <div class="footer">
@@ -213,9 +231,11 @@ function updateT1() {
   const day   = document.getElementById('t1-day').value;
   const loc   = document.getElementById('t1-loc').value;
   const time  = document.getElementById('t1-time').value;
+  const phone = document.getElementById('t1-phone').value;
   document.getElementById('p1-title').textContent = title;
   document.getElementById('p1-cat').textContent   = cat + ' · ' + day;
   document.getElementById('p1-loc').textContent   = '📍 ' + loc + ' · ' + time;
+  document.getElementById('p1-phone').textContent = phone ? '📞 ' + phone : '';
 }
 
 function updateT2() {
@@ -223,6 +243,8 @@ function updateT2() {
     document.getElementById('p2-n'+i).textContent = document.getElementById('t2-n'+i).value;
     document.getElementById('p2-l'+i).textContent = document.getElementById('t2-l'+i).value;
     document.getElementById('p2-d'+i).textContent = document.getElementById('t2-d'+i).value;
+    const phone = document.getElementById('t2-p'+i).value;
+    document.getElementById('p2-p'+i).textContent = phone ? '📞 ' + phone : '';
   });
 }
 
