@@ -101,6 +101,7 @@
   <div class="chip" onclick="setFilter(this,'karti.com.mk')">karti.com.mk</div>
   <div class="chip" onclick="setFilter(this,'kadevecer.online')">kadevecer.online</div>
   <div class="chip" onclick="setFilter(this,'mktickets.mk')">mktickets.mk</div>
+  <div class="chip" onclick="setFilter(this,'skopje')">📍 Скопје</div>
 </div>
 
 <div class="grid" id="grid">
@@ -201,6 +202,7 @@ function renderGrid() {
   let visible = allEvents;
   if (activeFilter === 'pending') visible = allEvents.filter(e => !isAdded(e));
   else if (activeFilter === 'added') visible = allEvents.filter(e => isAdded(e));
+  else if (activeFilter === 'skopje') visible = allEvents.filter(e => /skopje|скопје/i.test(e.location || ''));
   else if (activeFilter !== 'all')   visible = allEvents.filter(e => e.source === activeFilter);
 
   if (visible.length === 0) {
