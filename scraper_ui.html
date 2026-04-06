@@ -267,6 +267,10 @@ function renderGrid() {
             <input type="text" id="place-${globalIdx}" placeholder="${escHtml(ev.location || ev.title)}" value="${escHtml(ev.location)}" ${added ? 'disabled' : ''} />
           </div>
           <div>
+            <label>Линк за локација (Google Maps)</label>
+            <input type="url" id="location-${globalIdx}" placeholder="https://maps.google.com/..." value="" ${added ? 'disabled' : ''} />
+          </div>
+          <div>
             <label>Опис (опционално)</label>
             <textarea id="desc-${globalIdx}" placeholder="Краток опис…" ${added ? 'disabled' : ''}></textarea>
           </div>
@@ -300,10 +304,11 @@ window.addEvent = async function(idx) {
   btn.classList.add('loading');
   btn.disabled = true;
 
-  const kat   = document.getElementById(`kat-${idx}`).value;
-  const vreme = document.getElementById(`vreme-${idx}`).value.trim() || '20:00';
-  const place = document.getElementById(`place-${idx}`).value.trim() || ev.location || ev.title;
-  const desc  = document.getElementById(`desc-${idx}`).value.trim();
+  const kat      = document.getElementById(`kat-${idx}`).value;
+  const vreme    = document.getElementById(`vreme-${idx}`).value.trim() || '20:00';
+  const place    = document.getElementById(`place-${idx}`).value.trim() || ev.location || ev.title;
+  const location = document.getElementById(`location-${idx}`).value.trim();
+  const desc     = document.getElementById(`desc-${idx}`).value.trim();
 
   const doc = {
     title:      ev.title,
@@ -314,7 +319,7 @@ window.addEvent = async function(idx) {
     imgSrc:     ev.image_url || '',
     desc,
     badge:      ev.source,
-    location:   '',
+    location,
     artistIds:  [],
     source:     ev.source,
     addedAt:    new Date().toISOString(),
@@ -331,7 +336,7 @@ window.addEvent = async function(idx) {
     card.querySelector('.status-badge').className = 'status-badge added';
     card.querySelector('.status-badge').textContent = '✓ Додадено';
     // disable inputs
-    ['kat','vreme','place','desc'].forEach(f => {
+    ['kat','vreme','place','location','desc'].forEach(f => {
       const el = document.getElementById(`${f}-${idx}`);
       if (el) el.disabled = true;
     });
