@@ -50,12 +50,6 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .date-row { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px; }
 
-    .file-input-wrap { position: relative; }
-    .file-input-wrap input[type="file"] { opacity: 0; position: absolute; inset: 0; cursor: pointer; }
-    .file-input-label { display: flex; align-items: center; gap: 8px; background: #161616; border: 1px dashed #2a2a2a; color: #666; padding: 11px 14px; border-radius: 12px; font-size: 14px; cursor: pointer; transition: border-color 0.15s; }
-    .file-input-label:hover { border-color: #ff5c35; color: #aaa; }
-    .file-input-label.has-file { border-color: #ff5c35; color: #f5f0e8; }
-
     .submit-btn {
       width: 100%;
       background: #ff5c35;
@@ -100,11 +94,6 @@
       display: flex; align-items: center; gap: 6px;
     }
     .upload-btn:hover { border-color: #ff5c35; color: #f5f0e8; }
-    .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .upload-progress { font-size: 11px; color: #666; margin-top: 5px; display: none; }
-    .upload-progress.show { display: block; }
-    .upload-progress.ok  { color: #4cff91; }
-    .upload-progress.err { color: #ff5c35; }
 
   </style>
 </head>
@@ -173,12 +162,10 @@
     <label>Слика (URL)</label>
     <div class="img-field-wrap">
       <input type="url" id="f-image-url" placeholder="https://..." />
-      <button class="upload-btn" id="upload-btn" onclick="document.getElementById('f-image-file').click()" type="button">
+      <button class="upload-btn" id="upload-btn" onclick="openCloudinary()" type="button">
         📷 Избери слика
       </button>
-      <input type="file" id="f-image-file" accept="image/*" style="display:none" onchange="uploadImage(this)" />
     </div>
-    <div class="upload-progress" id="upload-progress"></div>
   </div>
 
   <div class="form-group">
@@ -211,7 +198,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
@@ -224,8 +211,49 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const db      = firebase.firestore();
-  const storage = firebase.storage();
+  const db = firebase.firestore();
+
+  // ── Cloudinary upload widget ──
+  let cloudinaryWidget;
+  function openCloudinary() {
+    if (!cloudinaryWidget) {
+      cloudinaryWidget = cloudinary.createUploadWidget(
+        {
+          cloudName:    'dmvqjlvcj',
+          uploadPreset: 'ml_default',
+          sources:      ['local', 'camera', 'url'],
+          multiple:     false,
+          folder:       'skopjevibes',
+          clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+          maxFileSize:  5000000,
+          styles: {
+            palette: {
+              window:      '#161616',
+              windowBorder:'#2a2a2a',
+              tabIcon:     '#ff5c35',
+              menuIcons:   '#aaaaaa',
+              textDark:    '#f5f0e8',
+              textLight:   '#f5f0e8',
+              link:        '#ff5c35',
+              action:      '#ff5c35',
+              inactiveTabIcon: '#555555',
+              error:       '#ff5c35',
+              inProgress:  '#ff5c35',
+              complete:    '#4cff91',
+              sourceBg:    '#0d0d0d',
+            },
+          },
+        },
+        (error, result) => {
+          if (error) { console.error('Cloudinary error:', error); return; }
+          if (result.event === 'success') {
+            document.getElementById('f-image-url').value = result.info.secure_url;
+          }
+        }
+      );
+    }
+    cloudinaryWidget.open();
+  }
 
   const ADMIN_PASSWORD = "skopjevibes2025";
   let editingId = null;
@@ -249,54 +277,6 @@
     const m = document.getElementById('f-month').value;
     const y = document.getElementById('f-year').value;
     return `${y}-${m}-${d}`;
-  }
-
-  function updateFileLabel(input) {
-    const label = document.getElementById('file-label');
-    if (input.files && input.files[0]) {
-      label.textContent = '📷 ' + input.files[0].name;
-      label.classList.add('has-file');
-    } else {
-      label.textContent = '📷 Избери слика...';
-      label.classList.remove('has-file');
-    }
-  }
-
-  async function uploadImage(input) {
-    if (!input.files || !input.files[0]) return;
-    const file     = input.files[0];
-    const progress = document.getElementById('upload-progress');
-    const btn      = document.getElementById('upload-btn');
-
-    btn.disabled     = true;
-    btn.textContent  = '⏳ Се прикачува...';
-    progress.className   = 'upload-progress show';
-    progress.textContent = 'Се прикачува...';
-
-    try {
-      const ext  = file.name.split('.').pop();
-      const name = `events/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const ref  = storage.ref(name);
-      const task = ref.put(file);
-
-      task.on('state_changed', snap => {
-        const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
-        progress.textContent = `Се прикачува… ${pct}%`;
-      });
-
-      await task;
-      const url = await ref.getDownloadURL();
-      document.getElementById('f-image-url').value = url;
-      progress.className   = 'upload-progress show ok';
-      progress.textContent = '✓ Сликата е прикачена';
-    } catch (err) {
-      progress.className   = 'upload-progress show err';
-      progress.textContent = '✗ Грешка: ' + err.message;
-    }
-
-    btn.disabled    = false;
-    btn.textContent = '📷 Избери слика';
-    input.value     = '';
   }
 
   function checkLogin() {
