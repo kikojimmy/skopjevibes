@@ -91,6 +91,21 @@
     .cancel-btn:hover { border-color: #555; color: #f5f0e8; }
     .empty-list { text-align: center; color: #444; font-size: 13px; padding: 24px 0; }
 
+    .img-field-wrap { display: flex; gap: 8px; }
+    .img-field-wrap input { flex: 1; min-width: 0; }
+    .upload-btn {
+      flex-shrink: 0; background: #1f1f1f; border: 1px solid #2a2a2a; color: #aaa;
+      border-radius: 12px; padding: 0 14px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .upload-btn:hover { border-color: #ff5c35; color: #f5f0e8; }
+    .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .upload-progress { font-size: 11px; color: #666; margin-top: 5px; display: none; }
+    .upload-progress.show { display: block; }
+    .upload-progress.ok  { color: #4cff91; }
+    .upload-progress.err { color: #ff5c35; }
+
   </style>
 </head>
 <body>
@@ -156,7 +171,14 @@
 
   <div class="form-group">
     <label>Слика (URL)</label>
-    <input type="url" id="f-image-url" placeholder="https://..." />
+    <div class="img-field-wrap">
+      <input type="url" id="f-image-url" placeholder="https://..." />
+      <button class="upload-btn" id="upload-btn" onclick="document.getElementById('f-image-file').click()" type="button">
+        📷 Избери слика
+      </button>
+      <input type="file" id="f-image-file" accept="image/*" style="display:none" onchange="uploadImage(this)" />
+    </div>
+    <div class="upload-progress" id="upload-progress"></div>
   </div>
 
   <div class="form-group">
@@ -189,6 +211,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
@@ -201,7 +224,8 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const db      = firebase.firestore();
+  const storage = firebase.storage();
 
   const ADMIN_PASSWORD = "skopjevibes2025";
   let editingId = null;
@@ -236,6 +260,43 @@
       label.textContent = '📷 Избери слика...';
       label.classList.remove('has-file');
     }
+  }
+
+  async function uploadImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const file     = input.files[0];
+    const progress = document.getElementById('upload-progress');
+    const btn      = document.getElementById('upload-btn');
+
+    btn.disabled     = true;
+    btn.textContent  = '⏳ Се прикачува...';
+    progress.className   = 'upload-progress show';
+    progress.textContent = 'Се прикачува...';
+
+    try {
+      const ext  = file.name.split('.').pop();
+      const name = `events/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const ref  = storage.ref(name);
+      const task = ref.put(file);
+
+      task.on('state_changed', snap => {
+        const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
+        progress.textContent = `Се прикачува… ${pct}%`;
+      });
+
+      await task;
+      const url = await ref.getDownloadURL();
+      document.getElementById('f-image-url').value = url;
+      progress.className   = 'upload-progress show ok';
+      progress.textContent = '✓ Сликата е прикачена';
+    } catch (err) {
+      progress.className   = 'upload-progress show err';
+      progress.textContent = '✗ Грешка: ' + err.message;
+    }
+
+    btn.disabled    = false;
+    btn.textContent = '📷 Избери слика';
+    input.value     = '';
   }
 
   function checkLogin() {
