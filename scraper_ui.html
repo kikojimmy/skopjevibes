@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkopjeVibes – Scraper UI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #0d0d0d; color: #f5f0e8; min-height: 100vh; padding-bottom: 60px; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #1f1f1f; position: sticky; top: 0; background: #0d0d0d; z-index: 10; }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
+    .logo span { color: #ff5c35; }
+    .nav-meta { font-size: 12px; color: #555; }
+
+    .toolbar { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap; }
+    .toolbar-stat { font-size: 12px; color: #666; }
+    .toolbar-stat strong { color: #f5f0e8; }
+    .btn-reload { margin-left: auto; background: #1f1f1f; border: 1px solid #2a2a2a; color: #aaa; padding: 7px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+    .btn-reload:hover { border-color: #444; color: #f5f0e8; }
+
+    .filter-bar { display: flex; gap: 8px; padding: 14px 20px; overflow-x: auto; scrollbar-width: none; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .chip { flex-shrink: 0; border: 1px solid #2a2a2a; background: #161616; color: #aaa; padding: 6px 13px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+    .chip.active { background: #ff5c35; border-color: #ff5c35; color: #fff; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; padding: 20px; }
+
+    .card { background: #161616; border-radius: 16px; border: 1px solid #1f1f1f; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.15s; }
+    .card.added { border-color: #2a4a2a; }
+    .card.added .card-header { opacity: 0.6; }
+
+    .card-header { position: relative; }
+    .card-img { width: 100%; height: 160px; object-fit: cover; display: block; background: #1a1a1a; }
+    .card-img-placeholder { width: 100%; height: 160px; display: flex; align-items: center; justify-content: center; font-size: 40px; background: linear-gradient(135deg, #1a0a2e, #2d1b4e); }
+    .source-badge { position: absolute; top: 10px; left: 10px; background: rgba(13,13,13,0.85); border: 1px solid #2a2a2a; border-radius: 6px; padding: 3px 8px; font-size: 10px; color: #aaa; backdrop-filter: blur(4px); }
+    .status-badge { position: absolute; top: 10px; right: 10px; border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 500; }
+    .status-badge.added    { background: #1a3a1a; color: #4cff91; border: 1px solid #2a4a2a; }
+    .status-badge.pending  { background: #2a1a00; color: #ffaa44; border: 1px solid #3a2a00; }
+
+    .card-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+    .scraped-info { display: flex; flex-direction: column; gap: 4px; }
+    .event-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; line-height: 1.2; }
+    .event-meta  { font-size: 12px; color: #777; display: flex; flex-wrap: wrap; gap: 6px; }
+    .event-meta span { display: flex; align-items: center; gap: 3px; }
+
+    .divider { height: 1px; background: #1f1f1f; }
+
+    .fields { display: flex; flex-direction: column; gap: 8px; }
+    .field-row { display: flex; gap: 8px; }
+    label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 3px; }
+    select, input[type="text"], textarea {
+      width: 100%; background: #111; border: 1px solid #2a2a2a; color: #f5f0e8;
+      border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+      outline: none; transition: border-color 0.15s;
+    }
+    select:focus, input:focus, textarea:focus { border-color: #ff5c35; }
+    textarea { resize: vertical; min-height: 56px; }
+    .field-half { flex: 1; min-width: 0; }
+
+    .btn-add {
+      width: 100%; background: #ff5c35; color: #fff; border: none; border-radius: 10px;
+      padding: 12px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+      cursor: pointer; transition: background 0.15s; margin-top: auto;
+    }
+    .btn-add:hover:not(:disabled) { background: #ff4520; }
+    .btn-add:disabled { background: #1a3a1a; color: #4cff91; cursor: default; }
+    .btn-add.loading { background: #333; color: #aaa; cursor: default; }
+
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 12px 20px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+    .toast.show { opacity: 1; }
+    .toast.ok  { border-color: #2a4a2a; color: #4cff91; }
+    .toast.err { border-color: #4a1a1a; color: #ff5c35; }
+
+    .empty { grid-column: 1/-1; text-align: center; padding: 60px 0; color: #444; font-size: 14px; }
+    .spinner { width: 20px; height: 20px; border: 2px solid #2a2a2a; border-top-color: #ff5c35; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Skopje<span>Vibes</span> <span style="color:#555;font-size:13px;font-weight:400;font-family:'DM Sans',sans-serif;">Scraper UI</span></div>
+  <div class="nav-meta" id="nav-meta">Вчитување…</div>
+</nav>
+
+<div class="toolbar">
+  <div class="toolbar-stat">Вкупно: <strong id="stat-total">–</strong></div>
+  <div class="toolbar-stat">Додадени: <strong id="stat-added" style="color:#4cff91">–</strong></div>
+  <div class="toolbar-stat">Чекаат: <strong id="stat-pending" style="color:#ffaa44">–</strong></div>
+  <button class="btn-reload" onclick="loadAll()">↺ Превчитај</button>
+</div>
+
+<div class="filter-bar" id="filter-bar">
+  <div class="chip active" onclick="setFilter(this,'all')">Сите</div>
+  <div class="chip" onclick="setFilter(this,'pending')">⏳ Чекаат</div>
+  <div class="chip" onclick="setFilter(this,'added')">✓ Додадени</div>
+  <div class="chip" onclick="setFilter(this,'nastani.site')">nastani.site</div>
+  <div class="chip" onclick="setFilter(this,'karti.com.mk')">karti.com.mk</div>
+  <div class="chip" onclick="setFilter(this,'kadevecer.online')">kadevecer.online</div>
+  <div class="chip" onclick="setFilter(this,'mktickets.mk')">mktickets.mk</div>
+</div>
+
+<div class="grid" id="grid">
+  <div class="empty"><div class="spinner"></div>Вчитување на настани…</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
+  authDomain:        "skopjevibes-df97b.firebaseapp.com",
+  projectId:         "skopjevibes-df97b",
+  storageBucket:     "skopjevibes-df97b.firebasestorage.app",
+  messagingSenderId: "534773019597",
+  appId:             "1:534773019597:web:82ff3ea8a88f43eee90a84",
+  measurementId:     "G-HWH14N5VSV"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// Category mappings from scraper values → Firestore kategorija
+const CAT_MAP = {
+  // karti.com.mk
+  'concerts': 'koncert', 'theater': 'kultura', 'cinema': 'kultura',
+  'sport': 'sport', 'sports': 'sport', 'other': 'koncert',
+  // kadevecer.online
+  'nightlife': 'klub', 'Nightlife': 'klub',
+  // generic
+  'музика': 'koncert', 'music': 'koncert', 'club': 'klub',
+};
+
+const KAT_EMOJI = {
+  klub: '🎧', koncert: '🎵', bar: '🍹', kafana: '🍺',
+  'sport-kultura': '⚽', kultura: '🎭',
+};
+
+function guessKategorija(ev) {
+  if (CAT_MAP[ev.category]) return CAT_MAP[ev.category];
+  if (CAT_MAP[(ev.category || '').toLowerCase()]) return CAT_MAP[ev.category.toLowerCase()];
+  if (ev.source === 'kadevecer.online') return 'klub';
+  return 'koncert';
+}
+
+let allEvents   = [];   // raw from events.json
+let addedTitles = new Set(); // titles already in Firestore
+let activeFilter = 'all';
+
+// ── Load Firestore existing events to mark duplicates ──
+async function loadFirestoreEvents() {
+  try {
+    const snap = await getDocs(collection(db, 'nastani'));
+    snap.docs.forEach(doc => addedTitles.add(doc.data().title?.trim().toLowerCase()));
+  } catch (e) {
+    console.warn('Could not load Firestore events:', e);
+  }
+}
+
+// ── Load events.json ──
+async function loadEventsJson() {
+  const resp = await fetch('events.json');
+  if (!resp.ok) throw new Error('events.json not found');
+  return resp.json();
+}
+
+window.loadAll = async function() {
+  document.getElementById('grid').innerHTML = '<div class="empty"><div class="spinner"></div>Вчитување…</div>';
+  document.getElementById('nav-meta').textContent = 'Вчитување…';
+  try {
+    [allEvents] = await Promise.all([loadEventsJson(), loadFirestoreEvents()]);
+    updateStats();
+    renderGrid();
+    document.getElementById('nav-meta').textContent = new Date().toLocaleTimeString('mk');
+  } catch (e) {
+    document.getElementById('grid').innerHTML = `<div class="empty">Грешка: ${e.message}</div>`;
+  }
+};
+
+function isAdded(ev) {
+  return addedTitles.has(ev.title.trim().toLowerCase());
+}
+
+function updateStats() {
+  const pending = allEvents.filter(e => !isAdded(e)).length;
+  document.getElementById('stat-total').textContent   = allEvents.length;
+  document.getElementById('stat-added').textContent   = allEvents.length - pending;
+  document.getElementById('stat-pending').textContent = pending;
+}
+
+// ── Render ──
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  let visible = allEvents;
+  if (activeFilter === 'pending') visible = allEvents.filter(e => !isAdded(e));
+  else if (activeFilter === 'added') visible = allEvents.filter(e => isAdded(e));
+  else if (activeFilter !== 'all')   visible = allEvents.filter(e => e.source === activeFilter);
+
+  if (visible.length === 0) {
+    grid.innerHTML = '<div class="empty">Нема настани за овој филтер</div>';
+    return;
+  }
+
+  grid.innerHTML = visible.map((ev, i) => {
+    const globalIdx = allEvents.indexOf(ev);
+    const added     = isAdded(ev);
+    const kat       = guessKategorija(ev);
+    const emoji     = KAT_EMOJI[kat] || '🎉';
+    const imgHtml   = ev.image_url
+      ? `<img class="card-img" src="${escHtml(ev.image_url)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="card-img-placeholder" style="display:none">${emoji}</div>`
+      : `<div class="card-img-placeholder">${emoji}</div>`;
+
+    return `
+    <div class="card${added ? ' added' : ''}" id="card-${globalIdx}">
+      <div class="card-header">
+        ${imgHtml}
+        <div class="source-badge">${escHtml(ev.source)}</div>
+        ${added ? '<div class="status-badge added">✓ Додадено</div>' : '<div class="status-badge pending">Чека</div>'}
+      </div>
+      <div class="card-body">
+        <div class="scraped-info">
+          <div class="event-title">${escHtml(ev.title)}</div>
+          <div class="event-meta">
+            ${ev.date     ? `<span>📅 ${escHtml(ev.date)}</span>` : ''}
+            ${ev.location ? `<span>📍 ${escHtml(ev.location)}</span>` : ''}
+            ${ev.category ? `<span>🏷️ ${escHtml(ev.category)}</span>` : ''}
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="fields">
+          <div class="field-row">
+            <div class="field-half">
+              <label>Категорија</label>
+              <select id="kat-${globalIdx}" ${added ? 'disabled' : ''}>
+                <option value="koncert"      ${kat==='koncert'      ?'selected':''}>🎵 Концерт</option>
+                <option value="klub"         ${kat==='klub'         ?'selected':''}>🎧 Клуб</option>
+                <option value="bar"          ${kat==='bar'          ?'selected':''}>🍹 Бар</option>
+                <option value="kafana"       ${kat==='kafana'       ?'selected':''}>🍺 Кафана</option>
+                <option value="kultura"      ${kat==='kultura'      ?'selected':''}>🎭 Култура</option>
+                <option value="sport-kultura" ${kat==='sport-kultura'?'selected':''}>⚽ Спорт/Култура</option>
+              </select>
+            </div>
+            <div class="field-half">
+              <label>Време</label>
+              <input type="text" id="vreme-${globalIdx}" placeholder="пр. 21:00" value="" ${added ? 'disabled' : ''} />
+            </div>
+          </div>
+          <div>
+            <label>Место (ако се разликува)</label>
+            <input type="text" id="place-${globalIdx}" placeholder="${escHtml(ev.location || ev.title)}" value="${escHtml(ev.location)}" ${added ? 'disabled' : ''} />
+          </div>
+          <div>
+            <label>Опис (опционално)</label>
+            <textarea id="desc-${globalIdx}" placeholder="Краток опис…" ${added ? 'disabled' : ''}></textarea>
+          </div>
+        </div>
+        <button
+          class="btn-add"
+          id="btn-${globalIdx}"
+          onclick="window.addEvent(${globalIdx})"
+          ${added ? 'disabled' : ''}
+        >${added ? '✓ Веќе додадено' : 'Додај на SkopjeVibes'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.setFilter = function(el, filter) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeFilter = filter;
+  renderGrid();
+};
+
+// ── Add to Firebase ──
+window.addEvent = async function(idx) {
+  const ev  = allEvents[idx];
+  const btn = document.getElementById(`btn-${idx}`);
+  btn.textContent = 'Се додава…';
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const kat   = document.getElementById(`kat-${idx}`).value;
+  const vreme = document.getElementById(`vreme-${idx}`).value.trim() || '20:00';
+  const place = document.getElementById(`place-${idx}`).value.trim() || ev.location || ev.title;
+  const desc  = document.getElementById(`desc-${idx}`).value.trim();
+
+  const doc = {
+    title:      ev.title,
+    datum:      ev.date || '',
+    vreme,
+    place,
+    kategorija: kat,
+    imgSrc:     ev.image_url || '',
+    desc,
+    badge:      ev.source,
+    location:   '',
+    artistIds:  [],
+    source:     ev.source,
+    addedAt:    new Date().toISOString(),
+  };
+
+  try {
+    await addDoc(collection(db, 'nastani'), doc);
+    addedTitles.add(ev.title.trim().toLowerCase());
+
+    btn.textContent = '✓ Веќе додадено';
+    btn.classList.remove('loading');
+    const card = document.getElementById(`card-${idx}`);
+    card.classList.add('added');
+    card.querySelector('.status-badge').className = 'status-badge added';
+    card.querySelector('.status-badge').textContent = '✓ Додадено';
+    // disable inputs
+    ['kat','vreme','place','desc'].forEach(f => {
+      const el = document.getElementById(`${f}-${idx}`);
+      if (el) el.disabled = true;
+    });
+
+    updateStats();
+    showToast('✓ Додадено: ' + ev.title, 'ok');
+  } catch (e) {
+    btn.textContent = 'Додај на SkopjeVibes';
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    showToast('Грешка: ' + e.message, 'err');
+  }
+};
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = `toast ${type} show`;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = `toast ${type}`; }, 3000);
+}
+
+function escHtml(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──
+loadAll();
+</script>
+</body>
+</html>
