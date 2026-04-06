@@ -60,10 +60,18 @@
     textarea { resize: vertical; min-height: 56px; }
     .field-half { flex: 1; min-width: 0; }
 
+    .btn-row { display: flex; gap: 8px; margin-top: auto; }
+    .btn-original {
+      flex-shrink: 0; background: #1f1f1f; border: 1px solid #2a2a2a; color: #aaa;
+      border-radius: 10px; padding: 12px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; text-decoration: none; display: flex; align-items: center;
+      transition: border-color 0.15s, color 0.15s; white-space: nowrap;
+    }
+    .btn-original:hover { border-color: #555; color: #f5f0e8; }
     .btn-add {
-      width: 100%; background: #ff5c35; color: #fff; border: none; border-radius: 10px;
+      flex: 1; background: #ff5c35; color: #fff; border: none; border-radius: 10px;
       padding: 12px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
-      cursor: pointer; transition: background 0.15s; margin-top: auto;
+      cursor: pointer; transition: background 0.15s;
     }
     .btn-add:hover:not(:disabled) { background: #ff4520; }
     .btn-add:disabled { background: #1a3a1a; color: #4cff91; cursor: default; }
@@ -263,12 +271,15 @@ function renderGrid() {
             <textarea id="desc-${globalIdx}" placeholder="Краток опис…" ${added ? 'disabled' : ''}></textarea>
           </div>
         </div>
-        <button
-          class="btn-add"
-          id="btn-${globalIdx}"
-          onclick="window.addEvent(${globalIdx})"
-          ${added ? 'disabled' : ''}
-        >${added ? '✓ Веќе додадено' : 'Додај на SkopjeVibes'}</button>
+        <div class="btn-row">
+          ${ev.url ? `<a class="btn-original" href="${escHtml(ev.url)}" target="_blank" rel="noopener">Оригинал ↗</a>` : ''}
+          <button
+            class="btn-add"
+            id="btn-${globalIdx}"
+            onclick="window.addEvent(${globalIdx})"
+            ${added ? 'disabled' : ''}
+          >${added ? '✓ Веќе додадено' : 'Додај на SkopjeVibes'}</button>
+        </div>
       </div>
     </div>`;
   }).join('');
