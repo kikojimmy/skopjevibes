@@ -273,7 +273,7 @@
       <div class="sheet-meta-row"><span>🕐</span><span>${n.date}</span></div>
       ${artistRow}
     `;
-    document.getElementById('sheet-badge-wrap').innerHTML = n.badge ? `<div class="sheet-badge">${n.badge}</div>` : '';
+    document.getElementById('sheet-badge-wrap').innerHTML = '';
     const btn = document.getElementById('sheet-btn');
     if (n.location) { btn.href = n.location; btn.style.display = 'block'; }
     else { btn.style.display = 'none'; }
