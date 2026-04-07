@@ -81,10 +81,10 @@
       .sheet.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: all; }
       .sheet-handle { display: none; }
       .sheet-img { height: 280px !important; min-height: 280px; }
-      .sheet-img img { height: 280px !important; object-fit: cover; }
+      .sheet-img img { width: 100% !important; height: 280px !important; object-fit: contain; }
     }
-    .sheet-img { width: 100%; display: flex; align-items: center; justify-content: center; font-size: 48px; overflow: hidden; min-height: 80px; }
-    .sheet-img img { width: 100%; height: auto; display: block; }
+    .sheet-img { width: 100%; display: flex; align-items: center; justify-content: center; font-size: 48px; overflow: hidden; min-height: 80px; background: #111; }
+    .sheet-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .sheet-body { padding: 16px 20px 36px; }
     .sheet-cat { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: #ff5c35; margin-bottom: 6px; }
     .sheet-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; line-height: 1.15; margin-bottom: 12px; }
