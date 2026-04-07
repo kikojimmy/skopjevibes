@@ -124,7 +124,7 @@
   </div>
 
   <div class="filters">
-    <div class="chip active" onclick="window.filterCat(this,'site')">🎉 Сите</div>
+    <div class="chip active" onclick="window.filterCat(this,'site');setTimeout(()=>document.querySelector('.section-label').scrollIntoView({behavior:'smooth',block:'start'}),50)">🎉 Сите</div>
     <div class="chip" onclick="window.filterCat(this,'bar')">🍹 Бар</div>
     <div class="chip" onclick="window.filterCat(this,'kafana')">🍺 Кафана</div>
     <div class="chip" onclick="window.filterCat(this,'koncert')">🎵 Концерт</div>
