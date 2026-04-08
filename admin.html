@@ -102,9 +102,10 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <h2>🔐 Admin панел</h2>
-  <input type="password" id="pwd-input" placeholder="Лозинка" onkeydown="if(event.key==='Enter')checkLogin()" />
+  <input type="email"    id="email-input" placeholder="Е-пошта" onkeydown="if(event.key==='Enter')checkLogin()" />
+  <input type="password" id="pwd-input"   placeholder="Лозинка" onkeydown="if(event.key==='Enter')checkLogin()" />
   <button onclick="checkLogin()">Влез</button>
-  <span id="login-error">Погрешна лозинка</span>
+  <span id="login-error"></span>
 </div>
 
 <!-- ADMIN PANEL -->
@@ -197,6 +198,7 @@
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 <script>
@@ -211,7 +213,21 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const db   = firebase.firestore();
+
+  // ── Auth state ──
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-panel').style.display  = 'block';
+      buildDateDropdowns(new Date());
+      loadEventsList();
+    } else {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('admin-panel').style.display  = 'none';
+    }
+  });
 
   // ── Cloudinary upload widget ──
   let cloudinaryWidget;
@@ -255,7 +271,6 @@
     cloudinaryWidget.open();
   }
 
-  const ADMIN_PASSWORD = "skopjevibes2025";
   let editingId = null;
   const MK_MONTHS = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 
@@ -279,22 +294,21 @@
     return `${y}-${m}-${d}`;
   }
 
-  function checkLogin() {
-    const pwd = document.getElementById('pwd-input').value;
-    if (pwd === ADMIN_PASSWORD) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-panel').style.display  = 'block';
-      buildDateDropdowns(new Date());
-      loadEventsList();
-    } else {
-      document.getElementById('login-error').style.display = 'block';
+  async function checkLogin() {
+    const email = document.getElementById('email-input').value.trim();
+    const pwd   = document.getElementById('pwd-input').value;
+    const errEl = document.getElementById('login-error');
+    errEl.style.display = 'none';
+    try {
+      await auth.signInWithEmailAndPassword(email, pwd);
+    } catch (err) {
+      errEl.textContent    = 'Погрешна е-пошта или лозинка';
+      errEl.style.display  = 'block';
     }
   }
 
   function logout() {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('admin-panel').style.display  = 'none';
-    document.getElementById('pwd-input').value = '';
+    auth.signOut();
   }
 
   function editNastan(id, n) {
