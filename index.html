@@ -93,11 +93,8 @@
     .sheet-meta-row span:first-child { font-size: 16px; }
     .sheet-desc { font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 20px; }
     .sheet-badge { display: inline-block; background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 20px; font-size: 11px; color: #aaa; padding: 4px 12px; margin-bottom: 20px; }
-    .sheet-btns { display: flex; gap: 10px; }
-    .sheet-btn { display: block; flex: 1; background: #ff5c35; color: #fff; border: none; border-radius: 14px; padding: 15px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; transition: background 0.15s; text-decoration: none; }
+    .sheet-btn { display: block; width: 100%; background: #ff5c35; color: #fff; border: none; border-radius: 14px; padding: 15px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; transition: background 0.15s; text-decoration: none; }
     .sheet-btn:hover { background: #ff4520; }
-    .sheet-btn-info { display: block; flex: 1; background: #1a1a1a; color: #f5f0e8; border: 1px solid #2a2a2a; border-radius: 14px; padding: 15px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; transition: border-color 0.15s; text-decoration: none; }
-    .sheet-btn-info:hover { border-color: #555; }
 
     @media (max-width: 380px) { .grid { grid-template-columns: 1fr; } .hero h1 { font-size: 28px; } }
     @media (min-width: 600px) {
@@ -163,10 +160,7 @@
     <div class="sheet-meta" id="sheet-meta"></div>
     <div class="sheet-desc" id="sheet-desc"></div>
     <div id="sheet-badge-wrap"></div>
-    <div class="sheet-btns">
-      <a class="sheet-btn" id="sheet-btn" target="_blank">Локација →</a>
-      <a class="sheet-btn-info" id="sheet-btn-info" target="_blank" rel="noopener">Повеќе инфо →</a>
-    </div>
+    <a class="sheet-btn" id="sheet-btn" target="_blank" rel="noopener">Повеќе инфо →</a>
   </div>
 </div>
 
@@ -233,7 +227,7 @@
           badge:      d.badge || '',
           desc:       d.desc || '',
           location:   d.location || '',
-          eventUrl:   d.eventUrl || '',
+          instagramUrl: d.instagramUrl || '',
           artistIds:  d.artistIds || []
         };
       }).filter(n => n.den >= 0);
@@ -282,11 +276,8 @@
     `;
     document.getElementById('sheet-badge-wrap').innerHTML = '';
     const btn = document.getElementById('sheet-btn');
-    if (n.location) { btn.href = n.location; btn.style.display = 'block'; }
+    if (n.instagramUrl) { btn.href = n.instagramUrl; btn.style.display = 'block'; }
     else { btn.style.display = 'none'; }
-    const infoBtn = document.getElementById('sheet-btn-info');
-    if (n.eventUrl) { infoBtn.href = n.eventUrl; infoBtn.style.display = 'block'; }
-    else { infoBtn.style.display = 'none'; }
     document.getElementById('overlay').classList.add('open');
     document.getElementById('sheet').classList.add('open');
     document.body.style.overflow = 'hidden';

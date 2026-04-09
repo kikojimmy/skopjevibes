@@ -175,6 +175,11 @@
   </div>
 
   <div class="form-group">
+    <label>Линк (може да биде Instagram, Facebook, ticket страна или било кој друг линк)</label>
+    <input type="url" id="f-link" placeholder="https://..." />
+  </div>
+
+  <div class="form-group">
     <label>Badge (цена, промоција...)</label>
     <input type="text" id="f-badge" placeholder="пр. Free Entry до 24h · или остави празно" />
   </div>
@@ -326,6 +331,7 @@
     document.getElementById('f-vreme').value     = n.vreme || '';
     document.getElementById('f-image-url').value = n.imgSrc || '';
     document.getElementById('f-location').value  = n.location || '';
+    document.getElementById('f-link').value      = n.instagramUrl || '';
     document.getElementById('f-badge').value     = n.badge || '';
     document.getElementById('f-desc').value      = n.desc || '';
 
@@ -352,6 +358,7 @@
     document.getElementById('f-vreme').value     = '';
     document.getElementById('f-image-url').value = '';
     document.getElementById('f-location').value  = '';
+    document.getElementById('f-link').value      = '';
     buildDateDropdowns(new Date());
   }
 
@@ -362,10 +369,11 @@
     const emoji      = document.getElementById('f-emoji').value.trim() || '🎉';
     const datum      = getDateValue();
     const vreme      = document.getElementById('f-vreme').value.trim() || '20:00';
-    const badge      = document.getElementById('f-badge').value.trim();
-    const desc       = document.getElementById('f-desc').value.trim();
-    const imgSrc     = document.getElementById('f-image-url').value.trim();
-    const location   = document.getElementById('f-location').value.trim();
+    const badge        = document.getElementById('f-badge').value.trim();
+    const desc         = document.getElementById('f-desc').value.trim();
+    const imgSrc       = document.getElementById('f-image-url').value.trim();
+    const location     = document.getElementById('f-location').value.trim();
+    const instagramUrl = document.getElementById('f-link').value.trim();
     if (!title || !place || !datum) {
       document.getElementById('error-msg').style.display   = 'block';
       document.getElementById('success-msg').style.display = 'none';
@@ -377,7 +385,7 @@
     btn.textContent = 'Зачувување...';
 
     try {
-      const data = { title, place, kategorija, imgEmoji: emoji, imgSrc, datum, vreme, badge, desc, location };
+      const data = { title, place, kategorija, imgEmoji: emoji, imgSrc, datum, vreme, badge, desc, location, instagramUrl };
       if (editingId) {
         await db.collection('nastani').doc(editingId).update(data);
       } else {
