@@ -224,6 +224,30 @@
       ]);
       artistsSnap.docs.forEach(doc => { artistsMap[doc.id] = doc.data(); });
       const snap = eventsSnap;
+
+      // Build full list for the map (all events, including past ones with lat/lng)
+      const allForMap = snap.docs
+        .map(doc => {
+          const d = doc.data();
+          return {
+            id:         doc.id,
+            kategorija: d.kategorija,
+            cat:        catMap[d.kategorija] || d.kategorija,
+            title:      d.title,
+            place:      d.place || '',
+            datum:      d.datum,
+            vreme:      d.vreme || '',
+            lat:        typeof d.lat === 'number' ? d.lat : (parseFloat(d.lat) || null),
+            lng:        typeof d.lng === 'number' ? d.lng : (parseFloat(d.lng) || null),
+            instagramUrl: d.instagramUrl || '',
+          };
+        })
+        .filter(n => n.lat && n.lng);
+
+      console.log(`[Map] Total docs: ${snap.docs.length}, with lat/lng: ${allForMap.length}`);
+      allForMap.forEach(n => console.log(`  📍 ${n.title} → lat:${n.lat} lng:${n.lng}`));
+
+      // Build date-filtered list for the cards grid (today + future only)
       const all = snap.docs.map(doc => {
         const d   = doc.data();
         const den = daysBetween(todayStr, d.datum);
@@ -245,8 +269,6 @@
           location:   d.location || '',
           instagramUrl: d.instagramUrl || '',
           artistIds:  d.artistIds || [],
-          lat: d.lat || null,
-          lng: d.lng || null
         };
       }).filter(n => n.den >= 0);
 
@@ -256,7 +278,7 @@
       buildDays();
       renderCards('site');
       renderNaskoro();
-      initMap(all);
+      initMap(allForMap);
     } catch (err) {
       document.getElementById('grid').innerHTML = '<div class="no-results">Грешка при вчитување</div>';
       console.error(err);
@@ -443,8 +465,8 @@
       maxZoom: 19,
     }).addTo(map);
 
+    console.log(`[Map] Rendering ${events.length} pins`);
     events.forEach(n => {
-      if (!n.lat || !n.lng) return;
       const color = CAT_COLORS[n.kategorija] || '#ff5c35';
       const bg    = CAT_BG[n.kategorija]    || '#1a1a1a';
       const icon  = L.divIcon({
@@ -452,10 +474,11 @@
         html: `<div style="width:12px;height:12px;border-radius:50%;background:${color};border:2px solid rgba(255,255,255,0.2);box-shadow:0 0 8px ${color}88"></div>`,
         iconSize: [12, 12], iconAnchor: [6, 6], popupAnchor: [0, -10],
       });
+      const meta = [n.place, n.datum, n.vreme].filter(Boolean).join(' · ');
       const popup = `
         <div class="map-cat" style="background:${bg};color:${color}">${n.cat}</div>
         <div class="map-title">${n.title}</div>
-        <div class="map-meta">${n.place} · ${n.date}</div>
+        <div class="map-meta">${meta}</div>
       `;
       L.marker([n.lat, n.lng], { icon }).bindPopup(popup, { maxWidth: 220 }).addTo(map);
     });
