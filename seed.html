@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seed – SkopjeVibes</title>
+  <style>
+    body { font-family: monospace; background: #0d0d0d; color: #f5f0e8; padding: 40px; max-width: 500px; }
+    input { display: block; width: 100%; background: #161616; border: 1px solid #2a2a2a; color: #f5f0e8; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 10px; box-sizing: border-box; }
+    button { background: #ff5c35; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+    #log { margin-top: 24px; white-space: pre-wrap; font-size: 13px; line-height: 1.7; }
+    .ok  { color: #4cff91; }
+    .err { color: #ff5c35; }
+  </style>
+</head>
+<body>
+  <h2 style="margin-bottom:20px">Seed 3 test events</h2>
+  <input type="email"    id="email" placeholder="Admin email" />
+  <input type="password" id="pwd"   placeholder="Admin password" />
+  <button onclick="run()">Add events to Firestore</button>
+  <div id="log"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
+    authDomain: "skopjevibes-df97b.firebaseapp.com",
+    projectId: "skopjevibes-df97b",
+  });
+  const auth = firebase.auth();
+  const db   = firebase.firestore();
+
+  const EVENTS = [
+    { title: 'Exit Club Night', kategorija: 'klub',    imgEmoji: '🎧', datum: '2025-04-11', vreme: '23:00', place: 'Club Exit',  lat: 41.9957, lng: 21.4313, badge: '', desc: '', imgSrc: '', location: '', instagramUrl: '' },
+    { title: 'Live Concert',    kategorija: 'koncert', imgEmoji: '🎵', datum: '2025-04-12', vreme: '21:00', place: 'Colosseum', lat: 42.0041, lng: 21.4094, badge: '', desc: '', imgSrc: '', location: '', instagramUrl: '' },
+    { title: 'Chill Vibes',     kategorija: 'bar',     imgEmoji: '🍹', datum: '2025-04-11', vreme: '20:00', place: 'Marakana',  lat: 41.9973, lng: 21.4157, badge: '', desc: '', imgSrc: '', location: '', instagramUrl: '' },
+  ];
+
+  function log(msg, cls) {
+    const el = document.getElementById('log');
+    const line = document.createElement('div');
+    if (cls) line.className = cls;
+    line.textContent = msg;
+    el.appendChild(line);
+  }
+
+  async function run() {
+    const email = document.getElementById('email').value.trim();
+    const pwd   = document.getElementById('pwd').value;
+    document.getElementById('log').innerHTML = '';
+    log('Signing in...');
+    try {
+      await auth.signInWithEmailAndPassword(email, pwd);
+      log('Signed in ✓', 'ok');
+    } catch (e) {
+      log('Login failed: ' + e.message, 'err');
+      return;
+    }
+    for (const ev of EVENTS) {
+      try {
+        const ref = await db.collection('nastani').add({ ...ev, createdAt: new Date().toISOString() });
+        log(`✅  "${ev.title}" → ${ref.id}`, 'ok');
+      } catch (e) {
+        log(`❌  "${ev.title}": ${e.message}`, 'err');
+      }
+    }
+    log('\nDone! You can close this tab.');
+  }
+</script>
+</body>
+</html>
