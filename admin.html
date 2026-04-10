@@ -124,8 +124,41 @@
   </div>
 
   <div class="form-group">
+    <label>Локал (пресет)</label>
+    <select id="f-venue" onchange="applyVenuePreset()">
+      <option value="">— Избери локал или внеси рачно —</option>
+      <option value="Exit"            data-lat="42.0007" data-lng="21.4048" data-place="Club Exit">Club Exit</option>
+      <option value="Colosseum"       data-lat="42.0015" data-lng="21.4257" data-place="Colosseum">Colosseum</option>
+      <option value="Havana"          data-lat="41.9956" data-lng="21.4238" data-place="Club Havana">Club Havana</option>
+      <option value="Marakana"        data-lat="42.0012" data-lng="21.4264" data-place="Marakana">Marakana</option>
+      <option value="Chair"           data-lat="42.0010" data-lng="21.4183" data-place="Chair">Chair</option>
+      <option value="MKC"             data-lat="41.9978" data-lng="21.4247" data-place="МКЦ">МКЦ</option>
+      <option value="Filharmonija"    data-lat="42.0054" data-lng="21.4382" data-place="Филхармонија">Филхармонија</option>
+      <option value="NacionalenTeatar" data-lat="41.9971" data-lng="21.4317" data-place="Национален театар">Национален театар</option>
+      <option value="ArenaBT"         data-lat="41.9831" data-lng="21.4060" data-place="Арена Борис Трајковски">Арена Борис Трајковски</option>
+      <option value="PublicRoom"      data-lat="41.9961" data-lng="21.4300" data-place="Public Room">Public Room</option>
+      <option value="Tribeca"         data-lat="41.9959" data-lng="21.4322" data-place="Tribeca">Tribeca</option>
+      <option value="DomNaArmijata"   data-lat="41.9975" data-lng="21.4319" data-place="Дом на армијата">Дом на армијата</option>
+      <option value="JaneSandanski"   data-lat="42.0092" data-lng="21.4233" data-place="СЦ Јане Сандански">СЦ Јане Сандanski</option>
+      <option value="MariotHotel"     data-lat="42.0019" data-lng="21.4354" data-place="Хотел Мариот">Хотел Мариот</option>
+      <option value="Kale"            data-lat="42.0044" data-lng="21.4248" data-place="Кале">Кале</option>
+    </select>
+  </div>
+
+  <div class="form-group">
     <label>Место / Клуб</label>
     <input type="text" id="f-place" placeholder="пр. Club Havana" />
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Латитуда (lat)</label>
+      <input type="number" id="f-lat" placeholder="42.0003" step="0.0001" />
+    </div>
+    <div class="form-group">
+      <label>Лонгитуда (lng)</label>
+      <input type="number" id="f-lng" placeholder="21.4290" step="0.0001" />
+    </div>
   </div>
 
   <div class="form-row">
@@ -276,6 +309,16 @@
     cloudinaryWidget.open();
   }
 
+  // ── Venue preset ──
+  function applyVenuePreset() {
+    const sel = document.getElementById('f-venue');
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.dataset.lat) return;
+    document.getElementById('f-place').value = opt.dataset.place || '';
+    document.getElementById('f-lat').value   = opt.dataset.lat   || '';
+    document.getElementById('f-lng').value   = opt.dataset.lng   || '';
+  }
+
   let editingId = null;
   const MK_MONTHS = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 
@@ -334,6 +377,9 @@
     document.getElementById('f-link').value      = n.instagramUrl || '';
     document.getElementById('f-badge').value     = n.badge || '';
     document.getElementById('f-desc').value      = n.desc || '';
+    document.getElementById('f-lat').value       = n.lat != null ? n.lat : '';
+    document.getElementById('f-lng').value       = n.lng != null ? n.lng : '';
+    document.getElementById('f-venue').value     = '';
 
     if (n.datum) {
       const eventDate = new Date(n.datum + 'T00:00:00');
@@ -359,6 +405,9 @@
     document.getElementById('f-image-url').value = '';
     document.getElementById('f-location').value  = '';
     document.getElementById('f-link').value      = '';
+    document.getElementById('f-lat').value       = '';
+    document.getElementById('f-lng').value       = '';
+    document.getElementById('f-venue').value     = '';
     buildDateDropdowns(new Date());
   }
 
@@ -374,6 +423,10 @@
     const imgSrc       = document.getElementById('f-image-url').value.trim();
     const location     = document.getElementById('f-location').value.trim();
     const instagramUrl = document.getElementById('f-link').value.trim();
+    const latRaw       = document.getElementById('f-lat').value.trim();
+    const lngRaw       = document.getElementById('f-lng').value.trim();
+    const lat          = latRaw ? parseFloat(latRaw) : null;
+    const lng          = lngRaw ? parseFloat(lngRaw) : null;
     if (!title || !place || !datum) {
       document.getElementById('error-msg').style.display   = 'block';
       document.getElementById('success-msg').style.display = 'none';
@@ -385,7 +438,7 @@
     btn.textContent = 'Зачувување...';
 
     try {
-      const data = { title, place, kategorija, imgEmoji: emoji, imgSrc, datum, vreme, badge, desc, location, instagramUrl };
+      const data = { title, place, kategorija, imgEmoji: emoji, imgSrc, datum, vreme, badge, desc, location, instagramUrl, lat, lng };
       if (editingId) {
         await db.collection('nastani').doc(editingId).update(data);
       } else {
