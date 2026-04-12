@@ -98,7 +98,7 @@
     .sheet-btn:hover { background: #ff4520; }
 
     /* ── Map ── */
-    #event-map { height: 55vh; width: 100%; z-index: 1; }
+    #event-map { height: 75vh; width: 100%; z-index: 1; }
     .leaflet-popup-content-wrapper { background: #161616 !important; border: 1px solid #2a2a2a !important; border-radius: 14px !important; color: #f5f0e8 !important; box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important; }
     .leaflet-popup-tip { background: #161616 !important; }
     .leaflet-popup-content { margin: 12px 14px !important; }
@@ -183,7 +183,7 @@
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
@@ -218,71 +218,75 @@
   // ── Load from Firestore ──
   async function loadNastani() {
     try {
-      const [eventsSnap, artistsSnap] = await Promise.all([
-        getDocs(query(collection(db, 'nastani'), orderBy('datum'))),
-        getDocs(collection(db, 'artists'))
-      ]);
+      const artistsSnap = await getDocs(collection(db, 'artists'));
       artistsSnap.docs.forEach(doc => { artistsMap[doc.id] = doc.data(); });
-      const snap = eventsSnap;
+    } catch (err) {
+      console.error('Failed to load artists:', err);
+    }
 
-      // Build full list for the map (all events, including past ones with lat/lng)
-      const allForMap = snap.docs
-        .map(doc => {
-          const d = doc.data();
+    onSnapshot(
+      query(collection(db, 'nastani'), orderBy('datum')),
+      (snap) => {
+        // Build full list for the map (all events, including past ones with lat/lng)
+        const allForMap = snap.docs
+          .map(doc => {
+            const d = doc.data();
+            return {
+              id:         doc.id,
+              kategorija: d.kategorija,
+              cat:        catMap[d.kategorija] || d.kategorija,
+              title:      d.title,
+              place:      d.place || '',
+              datum:      d.datum,
+              vreme:      d.vreme || '',
+              lat:        typeof d.lat === 'number' ? d.lat : (parseFloat(d.lat) || null),
+              lng:        typeof d.lng === 'number' ? d.lng : (parseFloat(d.lng) || null),
+              instagramUrl: d.instagramUrl || '',
+            };
+          })
+          .filter(n => n.lat && n.lng);
+
+        console.log(`[Map] Total docs: ${snap.docs.length}, with lat/lng: ${allForMap.length}`);
+        allForMap.forEach(n => console.log(`  📍 ${n.title} → lat:${n.lat} lng:${n.lng}`));
+
+        // Build date-filtered list for the cards grid (today + future only)
+        const all = snap.docs.map(doc => {
+          const d   = doc.data();
+          const den = daysBetween(todayStr, d.datum);
           return {
             id:         doc.id,
+            den,
+            datum:      d.datum,
+            vreme:      d.vreme,
             kategorija: d.kategorija,
+            imgClass:   imgClassMap[d.kategorija] || 'club-bg',
+            imgSrc:     d.imgSrc || '',
+            imgEmoji:   catEmojiMap[d.kategorija] || d.imgEmoji || '🎉',
             cat:        catMap[d.kategorija] || d.kategorija,
             title:      d.title,
-            place:      d.place || '',
-            datum:      d.datum,
-            vreme:      d.vreme || '',
-            lat:        typeof d.lat === 'number' ? d.lat : (parseFloat(d.lat) || null),
-            lng:        typeof d.lng === 'number' ? d.lng : (parseFloat(d.lng) || null),
+            place:      d.place,
+            date:       formatDate(d.datum, d.vreme),
+            badge:      d.badge || '',
+            desc:       d.desc || '',
+            location:   d.location || '',
             instagramUrl: d.instagramUrl || '',
+            artistIds:  d.artistIds || [],
           };
-        })
-        .filter(n => n.lat && n.lng);
+        }).filter(n => n.den >= 0);
 
-      console.log(`[Map] Total docs: ${snap.docs.length}, with lat/lng: ${allForMap.length}`);
-      allForMap.forEach(n => console.log(`  📍 ${n.title} → lat:${n.lat} lng:${n.lng}`));
+        nastani = all.filter(n => n.den <= 6);
+        naskoro = all.filter(n => n.den > 6);
 
-      // Build date-filtered list for the cards grid (today + future only)
-      const all = snap.docs.map(doc => {
-        const d   = doc.data();
-        const den = daysBetween(todayStr, d.datum);
-        return {
-          id:         doc.id,
-          den,
-          datum:      d.datum,
-          vreme:      d.vreme,
-          kategorija: d.kategorija,
-          imgClass:   imgClassMap[d.kategorija] || 'club-bg',
-          imgSrc:     d.imgSrc || '',
-          imgEmoji:   catEmojiMap[d.kategorija] || d.imgEmoji || '🎉',
-          cat:        catMap[d.kategorija] || d.kategorija,
-          title:      d.title,
-          place:      d.place,
-          date:       formatDate(d.datum, d.vreme),
-          badge:      d.badge || '',
-          desc:       d.desc || '',
-          location:   d.location || '',
-          instagramUrl: d.instagramUrl || '',
-          artistIds:  d.artistIds || [],
-        };
-      }).filter(n => n.den >= 0);
-
-      nastani = all.filter(n => n.den <= 6);
-      naskoro = all.filter(n => n.den > 6);
-
-      buildDays();
-      renderCards('site');
-      renderNaskoro();
-      initMap(allForMap);
-    } catch (err) {
-      document.getElementById('grid').innerHTML = '<div class="no-results">Грешка при вчитување</div>';
-      console.error(err);
-    }
+        buildDays();
+        renderCards(activeCat);
+        renderNaskoro();
+        renderMapPins(allForMap);
+      },
+      (err) => {
+        document.getElementById('grid').innerHTML = '<div class="no-results">Грешка при вчитување</div>';
+        console.error(err);
+      }
+    );
   }
 
   function daysBetween(from, to) {
@@ -451,20 +455,28 @@
     kultura:        '#2a0f20',
   };
 
-  function initMap(events) {
-    const map = L.map('event-map', {
+  let map = null;
+  let markersLayer = null;
+
+  function initMap() {
+    map = L.map('event-map', {
       center: [41.9981, 21.4254],
       zoom: 13,
       zoomControl: true,
       scrollWheelZoom: false,
+      attributionControl: false,
     });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
       subdomains: 'abcd',
       maxZoom: 19,
     }).addTo(map);
 
+    markersLayer = L.layerGroup().addTo(map);
+  }
+
+  function renderMapPins(events) {
+    markersLayer.clearLayers();
     console.log(`[Map] Rendering ${events.length} pins`);
     events.forEach(n => {
       const color = CAT_COLORS[n.kategorija] || '#ff5c35';
@@ -480,10 +492,11 @@
         <div class="map-title">${n.title}</div>
         <div class="map-meta">${meta}</div>
       `;
-      L.marker([n.lat, n.lng], { icon }).bindPopup(popup, { maxWidth: 220 }).addTo(map);
+      L.marker([n.lat, n.lng], { icon }).bindPopup(popup, { maxWidth: 220 }).addTo(markersLayer);
     });
   }
 
+  initMap();
   loadNastani();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
