@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SkopjeVibes – Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: #0d0d0d; color: #f5f0e8; min-height: 100vh; padding: 24px 20px 60px; }
@@ -95,6 +96,24 @@
     }
     .upload-btn:hover { border-color: #ff5c35; color: #f5f0e8; }
 
+    /* Geocoder */
+    .place-row { display: flex; gap: 8px; align-items: stretch; }
+    .place-row input { flex: 1; min-width: 0; }
+    .geo-btn {
+      flex-shrink: 0; background: #1f1f1f; border: 1px solid #2a2a2a; color: #aaa;
+      border-radius: 12px; padding: 0 14px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .geo-btn:hover:not(:disabled) { border-color: #ff5c35; color: #f5f0e8; }
+    .geo-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .geo-error { font-size: 11px; color: #ff5c35; margin-top: 6px; display: none; }
+
+    /* Coord map preview */
+    #coord-map-wrap { margin-top: 12px; display: none; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a2a; }
+    #coord-map { height: 220px; width: 100%; }
+    .coord-map-hint { font-size: 11px; color: #555; padding: 6px 10px 8px; background: #111; text-align: center; }
+
   </style>
 </head>
 <body>
@@ -147,7 +166,11 @@
 
   <div class="form-group">
     <label>Место / Клуб</label>
-    <input type="text" id="f-place" placeholder="пр. Club Havana" />
+    <div class="place-row">
+      <input type="text" id="f-place" placeholder="пр. Club Havana" />
+      <button class="geo-btn" id="geo-btn" type="button" onclick="geocodePlace()">🔍 Најди координати</button>
+    </div>
+    <div class="geo-error" id="geo-error"></div>
   </div>
 
   <div class="form-row">
@@ -159,6 +182,11 @@
       <label>Лонгитуда (lng)</label>
       <input type="number" id="f-lng" placeholder="21.4290" step="0.0001" />
     </div>
+  </div>
+
+  <div id="coord-map-wrap">
+    <div id="coord-map"></div>
+    <div class="coord-map-hint">Повлечи го пинот за да ја прецизираш локацијата</div>
   </div>
 
   <div class="form-row">
@@ -235,6 +263,7 @@
 
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -408,6 +437,8 @@
     document.getElementById('f-lat').value       = '';
     document.getElementById('f-lng').value       = '';
     document.getElementById('f-venue').value     = '';
+    document.getElementById('geo-error').style.display = 'none';
+    hideCoordMap();
     buildDateDropdowns(new Date());
   }
 
@@ -496,6 +527,122 @@
     } catch (err) {
       alert('Грешка при бришење');
     }
+  }
+
+  // ── Geocoding ──
+  const MK_BOUNDS = { latMin: 40.8, latMax: 42.4, lngMin: 20.4, lngMax: 23.1 };
+  let geoRateTimer  = null;
+  let coordMap      = null;
+  let coordMarker   = null;
+
+  function sanitizeGeoQuery(raw) {
+    return raw.trim().replace(/[<>"'`;&|$\\]/g, '').substring(0, 100);
+  }
+
+  function isInMacedonia(lat, lng) {
+    return lat >= MK_BOUNDS.latMin && lat <= MK_BOUNDS.latMax &&
+           lng >= MK_BOUNDS.lngMin && lng <= MK_BOUNDS.lngMax;
+  }
+
+  function setGeoBtn(state) {
+    const btn = document.getElementById('geo-btn');
+    if (state === 'loading') {
+      btn.disabled     = true;
+      btn.textContent  = '⏳ Барање...';
+    } else {
+      // ready or cooldown — label resets; cooldown keeps disabled=true
+      btn.textContent  = '🔍 Најди координати';
+      btn.disabled     = (state === 'cooldown');
+    }
+  }
+
+  function showCoordMap(lat, lng) {
+    const wrap = document.getElementById('coord-map-wrap');
+    wrap.style.display = 'block';
+
+    if (!coordMap) {
+      coordMap = L.map('coord-map', {
+        center: [lat, lng],
+        zoom: 16,
+        zoomControl: true,
+        scrollWheelZoom: false,
+        attributionControl: false,
+      });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(coordMap);
+
+      coordMarker = L.marker([lat, lng], { draggable: true }).addTo(coordMap);
+      coordMarker.on('dragend', () => {
+        const pos = coordMarker.getLatLng();
+        document.getElementById('f-lat').value = pos.lat.toFixed(6);
+        document.getElementById('f-lng').value = pos.lng.toFixed(6);
+      });
+    } else {
+      coordMap.setView([lat, lng], 16);
+      coordMarker.setLatLng([lat, lng]);
+    }
+
+    // Leaflet needs a tick to recalc size after display change
+    setTimeout(() => coordMap.invalidateSize(), 50);
+  }
+
+  function hideCoordMap() {
+    document.getElementById('coord-map-wrap').style.display = 'none';
+  }
+
+  async function geocodePlace() {
+    const raw   = document.getElementById('f-place').value;
+    const q     = sanitizeGeoQuery(raw);
+    const errEl = document.getElementById('geo-error');
+    errEl.style.display = 'none';
+
+    if (!q) {
+      errEl.textContent   = 'Внеси го името на местото прво.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    setGeoBtn('loading');
+
+    try {
+      const url = 'https://nominatim.openstreetmap.org/search?'
+        + new URLSearchParams({ q: q + ' Skopje Macedonia', format: 'json', limit: '3' });
+
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'SkopjeVibes/1.0' }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const results = await res.json();
+
+      const valid = results.find(r => {
+        const lat = parseFloat(r.lat);
+        const lng = parseFloat(r.lon);
+        return Number.isFinite(lat) && Number.isFinite(lng) && isInMacedonia(lat, lng);
+      });
+
+      if (!valid) {
+        errEl.textContent   = 'Не е пронајдено во Македонија. Провери го името или внеси координати рачно.';
+        errEl.style.display = 'block';
+      } else {
+        const lat = parseFloat(valid.lat).toFixed(6);
+        const lng = parseFloat(valid.lon).toFixed(6);
+        document.getElementById('f-lat').value = lat;
+        document.getElementById('f-lng').value = lng;
+        showCoordMap(parseFloat(lat), parseFloat(lng));
+      }
+    } catch (err) {
+      errEl.textContent   = 'Грешка при пребарување. Провери ја конекцијата.';
+      errEl.style.display = 'block';
+      console.error('Geocode error:', err);
+    }
+
+    // Rate limit: disable for 2 s after every request
+    setGeoBtn('cooldown');
+    clearTimeout(geoRateTimer);
+    geoRateTimer = setTimeout(() => setGeoBtn('ready'), 2000);
   }
 </script>
 </body>

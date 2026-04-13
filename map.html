@@ -83,6 +83,22 @@
     }
     .popup-link:hover { background: #ff4520; }
 
+    /* ── Back button ── */
+    #back-btn {
+      position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #ff5c35; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1002; box-shadow: 0 4px 16px rgba(255,92,53,0.45);
+      animation: bounce 1.8s ease-in-out infinite;
+    }
+    #back-btn:hover { background: #ff4520; }
+    #back-btn svg { width: 22px; height: 22px; fill: #fff; }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(-8px); }
+    }
+
     /* ── Count badge ── */
     #pin-count {
       position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -111,6 +127,10 @@
 
 <div id="map"></div>
 <div id="pin-count">Вчитување...</div>
+
+<button id="back-btn" onclick="window.location.href='index.html'" aria-label="Назад кон почетна">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 16.5l-7-7 1.41-1.41L12 13.67l5.59-5.58L19 9.5z"/></svg>
+</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
