@@ -252,6 +252,7 @@
       query(collection(db, 'nastani'), orderBy('datum')),
       (snap) => {
         // Build full list for the map (all events, including past ones with lat/lng)
+        const mapEmojiMap = { klub: '🎉', koncert: '🎸', bar: '🍸', kafana: '🥃', 'sport-kultura': '⚽', kultura: '🎭' };
         const allForMap = snap.docs
           .map(doc => {
             const d = doc.data();
@@ -259,6 +260,7 @@
               id:         doc.id,
               kategorija: d.kategorija,
               cat:        catMap[d.kategorija] || d.kategorija,
+              emoji:      d.imgEmoji || mapEmojiMap[d.kategorija] || '🎉',
               title:      d.title,
               place:      d.place || '',
               datum:      d.datum,
@@ -510,10 +512,14 @@
         html: `<div style="width:12px;height:12px;border-radius:50%;background:${color};border:2px solid rgba(255,255,255,0.2);box-shadow:0 0 8px ${color}88"></div>`,
         iconSize: [12, 12], iconAnchor: [6, 6], popupAnchor: [0, -10],
       });
-      const meta = [n.place, n.datum, n.vreme].filter(Boolean).join(' · ');
+      const dateParts = n.datum ? n.datum.split('-') : null;
+      const formattedDate = dateParts
+        ? `${parseInt(dateParts[2])} ${months[parseInt(dateParts[1]) - 1]} ${dateParts[0]}`
+        : '';
+      const meta = [n.place, formattedDate, n.vreme].filter(Boolean).join(' · ');
       const popup = `
         <div class="map-cat" style="background:${bg};color:${color}">${n.cat}</div>
-        <div class="map-title">${n.title}</div>
+        <div class="map-title">${n.emoji} ${n.title}</div>
         <div class="map-meta">${meta}</div>
       `;
       L.marker([n.lat, n.lng], { icon }).bindPopup(popup, { maxWidth: 220 }).addTo(markersLayer);
