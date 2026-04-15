@@ -85,6 +85,21 @@
     .cancel-btn  { width: 100%; background: none; border: 1px solid #2a2a2a; color: #888; border-radius: 14px; padding: 12px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 8px; transition: border-color 0.15s; display: none; }
     .cancel-btn:hover { border-color: #555; color: #f5f0e8; }
     .empty-list { text-align: center; color: #444; font-size: 13px; padding: 24px 0; }
+    #events-search {
+      width: 100%;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      color: #f5f0e8;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.15s;
+      margin-bottom: 12px;
+    }
+    #events-search:focus { border-color: #ff5c35; }
+    #events-search::placeholder { color: #444; }
 
     .img-field-wrap { display: flex; gap: 8px; }
     .img-field-wrap input { flex: 1; min-width: 0; }
@@ -258,6 +273,7 @@
   <!-- EVENTS LIST -->
   <div class="events-section">
     <div class="section-title">Постоечки настани</div>
+    <input type="text" id="events-search" placeholder="🔍 Пребарај настани по наслов..." oninput="filterEventsList(this.value)" />
     <div id="events-list"><div class="empty-list">Вчитување...</div></div>
   </div>
 
@@ -490,33 +506,59 @@
     btn.textContent = editingId ? 'Зачувај промени' : 'Додај настан';
   }
 
+  let allEvents = [];
+
   async function loadEventsList() {
     const listEl = document.getElementById('events-list');
     try {
-      const snap = await db.collection('nastani').orderBy('datum').get();
+      const snap = await db.collection('nastani').get();
       if (snap.empty) {
+        allEvents = [];
         listEl.innerHTML = '<div class="empty-list">Нема настани</div>';
         return;
       }
-      listEl.innerHTML = snap.docs.map(d => {
-        const n = d.data();
-        const safe = encodeURIComponent(JSON.stringify(n));
-        return `
-          <div class="event-item">
-            <div class="event-info">
-              <div class="event-title">${n.imgEmoji || ''} ${n.title}</div>
-              <div class="event-meta">${n.place} · ${n.datum} · ${n.vreme}</div>
-            </div>
-            <div class="event-actions">
-              <button class="edit-btn"   onclick="editNastan('${d.id}', JSON.parse(decodeURIComponent('${safe}')))">Уреди</button>
-              <button class="delete-btn" onclick="deleteNastan('${d.id}')">Избриши</button>
-            </div>
-          </div>
-        `;
-      }).join('');
+      allEvents = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => {
+          const ta = a.createdAt || '';
+          const tb = b.createdAt || '';
+          return tb.localeCompare(ta);
+        });
+      renderEventsList('');
     } catch (err) {
       listEl.innerHTML = '<div class="empty-list">Грешка при вчитување</div>';
     }
+  }
+
+  function filterEventsList(query) {
+    renderEventsList(query);
+  }
+
+  function renderEventsList(query) {
+    const listEl = document.getElementById('events-list');
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? allEvents.filter(n => (n.title || '').toLowerCase().includes(q))
+      : allEvents;
+    if (filtered.length === 0) {
+      listEl.innerHTML = '<div class="empty-list">Нема резултати</div>';
+      return;
+    }
+    listEl.innerHTML = filtered.map(n => {
+      const safe = encodeURIComponent(JSON.stringify(n));
+      return `
+        <div class="event-item">
+          <div class="event-info">
+            <div class="event-title">${n.imgEmoji || ''} ${n.title}</div>
+            <div class="event-meta">${n.place} · ${n.datum} · ${n.vreme}</div>
+          </div>
+          <div class="event-actions">
+            <button class="edit-btn"   onclick="editNastan('${n.id}', JSON.parse(decodeURIComponent('${safe}')))">Уреди</button>
+            <button class="delete-btn" onclick="deleteNastan('${n.id}')">Избриши</button>
+          </div>
+        </div>
+      `;
+    }).join('');
   }
 
   async function deleteNastan(id) {
