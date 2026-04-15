@@ -112,14 +112,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 0;
+  padding: 16px 0;
   cursor: pointer;
-  animation: bounce 1.8s infinite;
   background: #0d0d0d;
+  animation: bounce 1.8s ease-in-out infinite;
+}
+#scroll-arrow svg {
+  filter: drop-shadow(0 0 8px #ff5c2b88);
 }
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(6px); }
+  50% { transform: translateY(8px); }
 }
 
     @media (max-width: 380px) { .grid { grid-template-columns: 1fr; } .hero h1 { font-size: 28px; } }
@@ -142,7 +145,11 @@
 
 <div id="event-map"></div>
 
-<div id="scroll-arrow">&#8964;</div>
+<div id="scroll-arrow" onclick="document.querySelector('.section-label').scrollIntoView({behavior:'smooth'})">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+    <path d="M12 5v14M5 12l7 7 7-7" stroke="#ff5c2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</div>
 
 <div class="above-fold">
   <div class="hero">
