@@ -305,6 +305,7 @@
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-panel').style.display  = 'block';
       buildDateDropdowns(new Date());
+      populateVenueDropdown();
       loadEventsList();
     } else {
       document.getElementById('login-screen').style.display = 'flex';
@@ -362,6 +363,45 @@
     document.getElementById('f-place').value = opt.dataset.place || '';
     document.getElementById('f-lat').value   = opt.dataset.lat   || '';
     document.getElementById('f-lng').value   = opt.dataset.lng   || '';
+  }
+
+  // ── Saved venues (localStorage) ──
+  const LS_KEY = 'skopjevibes_venues';
+
+  function getSavedVenues() {
+    try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveVenueToLocalStorage(place, lat, lng) {
+    const venues = getSavedVenues().filter(v => v.place !== place);
+    venues.unshift({ place, lat, lng });
+    localStorage.setItem(LS_KEY, JSON.stringify(venues));
+  }
+
+  function populateVenueDropdown() {
+    const venues = getSavedVenues();
+    if (venues.length === 0) return;
+    const sel = document.getElementById('f-venue');
+    // Remove any previously injected saved-venue options
+    sel.querySelectorAll('option[data-saved]').forEach(o => o.remove());
+    const sep = sel.querySelector('option[data-sep]');
+    if (sep) sep.remove();
+    const separator = document.createElement('option');
+    separator.disabled = true;
+    separator.dataset.sep = '1';
+    separator.textContent = '── Зачувани локали ──';
+    sel.appendChild(separator);
+    venues.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value          = v.place;
+      opt.textContent    = v.place;
+      opt.dataset.place  = v.place;
+      opt.dataset.lat    = v.lat;
+      opt.dataset.lng    = v.lng;
+      opt.dataset.saved  = '1';
+      sel.appendChild(opt);
+    });
   }
 
   let editingId = null;
@@ -492,6 +532,10 @@
         await db.collection('nastani').add({ ...data, createdAt: new Date().toISOString() });
       }
 
+      if (place && lat != null && lng != null) {
+        saveVenueToLocalStorage(place, lat, lng);
+        populateVenueDropdown();
+      }
       document.getElementById('success-msg').style.display = 'block';
       document.getElementById('error-msg').style.display   = 'none';
       cancelEdit();
