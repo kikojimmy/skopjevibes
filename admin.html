@@ -299,9 +299,27 @@
   const auth = firebase.auth();
   const db   = firebase.firestore();
 
+  // ── Return URL (from scraper_ui redirect) ──
+  function getReturnUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const ret = params.get('return');
+    if (!ret) return null;
+    try {
+      const url = new URL(ret);
+      if (url.origin === window.location.origin) return ret;
+    } catch (_) {}
+    if (!ret.startsWith('http')) return ret;
+    return null;
+  }
+
   // ── Auth state ──
   auth.onAuthStateChanged(user => {
     if (user) {
+      const returnUrl = getReturnUrl();
+      if (returnUrl) {
+        window.location.href = returnUrl;
+        return;
+      }
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('admin-panel').style.display  = 'block';
       buildDateDropdowns(new Date());

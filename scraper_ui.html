@@ -121,6 +121,8 @@
 import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, query, where }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey:            "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
@@ -132,8 +134,19 @@ const firebaseConfig = {
   measurementId:     "G-HWH14N5VSV"
 };
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+let currentUser = null;
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  const meta = document.getElementById('nav-meta');
+  if (user) {
+    meta.innerHTML = `<span style="color:#4cff91">${user.email}</span> <button onclick="window.doSignOut()" style="margin-left:8px;background:none;border:1px solid #333;color:#888;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;">Одјави се</button>`;
+  }
+});
 
 // Category mappings from scraper values → Firestore kategorija
 const CAT_MAP = {
@@ -320,8 +333,19 @@ window.setFilter = function(el, filter) {
   renderGrid();
 };
 
+// ── Sign out ──
+window.doSignOut = async function() {
+  await signOut(auth);
+  showToast('Одјавен', 'ok');
+};
+
 // ── Add to Firebase ──
 window.addEvent = async function(idx) {
+  if (!currentUser) {
+    const returnUrl = encodeURIComponent(window.location.href);
+    window.location.href = `admin.html?return=${returnUrl}`;
+    return;
+  }
   const ev  = allEvents[idx];
   if (!isSkopje(ev)) {
     showToast('⛔ Настанот не е во Скопје — не може да се додаде', 'err');
