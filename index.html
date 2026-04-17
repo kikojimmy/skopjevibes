@@ -296,6 +296,7 @@
             desc:       d.desc || '',
             location:   d.location || '',
             instagramUrl: d.instagramUrl || '',
+            eventUrl:   d.eventUrl || '',
             artistIds:  d.artistIds || [],
           };
         }).filter(n => n.den >= 0);
@@ -347,7 +348,8 @@
     `;
     document.getElementById('sheet-badge-wrap').innerHTML = '';
     const btn = document.getElementById('sheet-btn');
-    if (n.instagramUrl) { btn.href = n.instagramUrl; btn.style.display = 'block'; }
+    const linkUrl = n.eventUrl || n.instagramUrl;
+    if (linkUrl) { btn.href = linkUrl; btn.style.display = 'block'; }
     else { btn.style.display = 'none'; }
     document.getElementById('overlay').classList.add('open');
     document.getElementById('sheet').classList.add('open');
