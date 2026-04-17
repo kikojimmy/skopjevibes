@@ -109,7 +109,6 @@
   <div class="chip" onclick="setFilter(this,'karti.com.mk')">karti.com.mk</div>
   <div class="chip" onclick="setFilter(this,'kadevecer.online')">kadevecer.online</div>
   <div class="chip" onclick="setFilter(this,'mktickets.mk')">mktickets.mk</div>
-  <div class="chip" onclick="setFilter(this,'skopje')">📍 Скопје</div>
 </div>
 
 <div class="grid" id="grid">
@@ -159,6 +158,17 @@ function guessKategorija(ev) {
   return 'koncert';
 }
 
+const NON_SKOPJE = /битола|охрид|струмица|тетово|кичево|штип|кочани|струга|велес|прилеп|куманово|гостивар|bitola|ohrid|strumica|tetovo|kichevo|shtip|kocani|struga|veles|prilep|kumanovo|gostivar/i;
+
+function isSkopje(ev) {
+  const loc   = ev.location || '';
+  const title = ev.title    || '';
+  // Exclude if location or title explicitly mentions a non-Skopje city
+  if (NON_SKOPJE.test(loc))   return false;
+  if (NON_SKOPJE.test(title)) return false;
+  return true;
+}
+
 let allEvents   = [];   // raw from events.json
 let addedTitles = new Set(); // titles already in Firestore
 let activeFilter = 'all';
@@ -201,20 +211,21 @@ function isAdded(ev) {
 }
 
 function updateStats() {
-  const pending = allEvents.filter(e => !isAdded(e)).length;
-  document.getElementById('stat-total').textContent   = allEvents.length;
-  document.getElementById('stat-added').textContent   = allEvents.length - pending;
+  const skopje  = allEvents.filter(isSkopje);
+  const pending  = skopje.filter(e => !isAdded(e)).length;
+  document.getElementById('stat-total').textContent   = skopje.length;
+  document.getElementById('stat-added').textContent   = skopje.length - pending;
   document.getElementById('stat-pending').textContent = pending;
 }
 
 // ── Render ──
 function renderGrid() {
   const grid = document.getElementById('grid');
-  let visible = allEvents;
-  if (activeFilter === 'pending') visible = allEvents.filter(e => !isAdded(e));
-  else if (activeFilter === 'added') visible = allEvents.filter(e => isAdded(e));
-  else if (activeFilter === 'skopje') visible = allEvents.filter(e => /skopje|скопје/i.test(e.location || ''));
-  else if (activeFilter !== 'all')   visible = allEvents.filter(e => e.source === activeFilter);
+  // Always pre-filter to Skopje-only events
+  let visible = allEvents.filter(isSkopje);
+  if (activeFilter === 'pending') visible = visible.filter(e => !isAdded(e));
+  else if (activeFilter === 'added') visible = visible.filter(e => isAdded(e));
+  else if (activeFilter !== 'all')   visible = visible.filter(e => e.source === activeFilter);
 
   if (visible.length === 0) {
     grid.innerHTML = '<div class="empty">Нема настани за овој филтер</div>';
@@ -302,6 +313,10 @@ window.setFilter = function(el, filter) {
 // ── Add to Firebase ──
 window.addEvent = async function(idx) {
   const ev  = allEvents[idx];
+  if (!isSkopje(ev)) {
+    showToast('⛔ Настанот не е во Скопје — не може да се додаде', 'err');
+    return;
+  }
   const btn = document.getElementById(`btn-${idx}`);
   btn.textContent = 'Се додава…';
   btn.classList.add('loading');
