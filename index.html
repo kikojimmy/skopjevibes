@@ -231,7 +231,7 @@
   const months   = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 
   const now      = new Date();
-  const todayStr = now.toISOString().split('T')[0]; // "2025-03-30"
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
   let nastani    = [];
   let naskoro    = [];
