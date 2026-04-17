@@ -175,33 +175,43 @@ let activeFilter = 'all';
 
 // ── Load Firestore existing events to mark duplicates ──
 async function loadFirestoreEvents() {
+  console.log('[scraper] loadFirestoreEvents: start');
+  const timeout = new Promise(resolve =>
+    setTimeout(() => { console.warn('[scraper] Firestore timeout — skipping'); resolve(null); }, 3000)
+  );
   try {
-    const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Firestore timeout')), 6000)
-    );
-    const snap = await Promise.race([getDocs(collection(db, 'nastani')), timeout]);
-    snap.docs.forEach(doc => addedTitles.add(doc.data().title?.trim().toLowerCase()));
+    const result = await Promise.race([getDocs(collection(db, 'nastani')), timeout]);
+    if (result === null) return; // timed out
+    console.log('[scraper] Firestore loaded:', result.docs.length, 'docs');
+    result.docs.forEach(doc => addedTitles.add(doc.data().title?.trim().toLowerCase()));
   } catch (e) {
-    console.warn('Could not load Firestore events:', e.message);
+    console.warn('[scraper] Firestore error:', e.message);
   }
 }
 
 // ── Load events.json ──
 async function loadEventsJson() {
+  console.log('[scraper] loadEventsJson: fetching...');
   const resp = await fetch('events.json');
-  if (!resp.ok) throw new Error('events.json not found');
-  return resp.json();
+  console.log('[scraper] loadEventsJson: status', resp.status);
+  if (!resp.ok) throw new Error('events.json not found (status ' + resp.status + ')');
+  const data = await resp.json();
+  console.log('[scraper] loadEventsJson: loaded', data.length, 'events');
+  return data;
 }
 
 window.loadAll = async function() {
+  console.log('[scraper] loadAll: start');
   document.getElementById('grid').innerHTML = '<div class="empty"><div class="spinner"></div>Вчитување…</div>';
   document.getElementById('nav-meta').textContent = 'Вчитување…';
   try {
     [allEvents] = await Promise.all([loadEventsJson(), loadFirestoreEvents()]);
+    console.log('[scraper] loadAll: allEvents =', allEvents.length);
     updateStats();
     renderGrid();
     document.getElementById('nav-meta').textContent = new Date().toLocaleTimeString('mk');
   } catch (e) {
+    console.error('[scraper] loadAll error:', e);
     document.getElementById('grid').innerHTML = `<div class="empty">Грешка: ${e.message}</div>`;
   }
 };
