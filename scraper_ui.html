@@ -166,10 +166,13 @@ let activeFilter = 'all';
 // ── Load Firestore existing events to mark duplicates ──
 async function loadFirestoreEvents() {
   try {
-    const snap = await getDocs(collection(db, 'nastani'));
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Firestore timeout')), 6000)
+    );
+    const snap = await Promise.race([getDocs(collection(db, 'nastani')), timeout]);
     snap.docs.forEach(doc => addedTitles.add(doc.data().title?.trim().toLowerCase()));
   } catch (e) {
-    console.warn('Could not load Firestore events:', e);
+    console.warn('Could not load Firestore events:', e.message);
   }
 }
 
