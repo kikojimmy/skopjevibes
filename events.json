@@ -1,41 +1,5 @@
 [
   {
-    "title": "Lord of the Dance",
-    "date": "2026-04-07",
-    "location": "С.Ц. Борис Трајковски, Скопје",
-    "category": "",
-    "image_url": "https://www.karti.com.mk/content/lord333.jpg?ver001",
-    "url": "https://www.karti.com.mk/lord.nspx",
-    "source": "nastani.site"
-  },
-  {
-    "title": "Велигденски концерт",
-    "date": "2026-04-08",
-    "location": "Филхармонија, Скопје",
-    "category": "",
-    "image_url": "https://www.filharmonija.mk/wp-content/themes/dvv-blank-child/assets/images/default.png",
-    "url": "https://www.filharmonija.mk/events/%d0%b2%d0%b5%d0%bb%d0%b8%d0%b3%d0%b4%d0%b5%d0%bd%d1%81%d0%ba%d0%b8-%d0%ba%d0%be%d0%bd%d1%86%d0%b5%d1%80%d1%82/",
-    "source": "nastani.site"
-  },
-  {
-    "title": "ЈАКОВ ЈОЗИНОВИЌ „Ja za čuda letim“",
-    "date": "2026-04-09",
-    "location": "Спортски центар „Јане Сандански”, Скопје",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2025/12/jjbaner.png",
-    "url": "https://mktickets.mk/event/jakov-jozinovic-ja-za-cuda-letim/",
-    "source": "nastani.site"
-  },
-  {
-    "title": "Дијалог",
-    "date": "2026-04-16",
-    "location": "Филхармонија, Скопје",
-    "category": "",
-    "image_url": "https://www.filharmonija.mk/wp-content/themes/dvv-blank-child/assets/images/default.png",
-    "url": "https://www.filharmonija.mk/events/%d0%b4%d0%b8%d1%98%d0%b0%d0%bb%d0%be%d0%b3/",
-    "source": "nastani.site"
-  },
-  {
     "title": "Чисто, искрено, гласно!",
     "date": "2026-04-23",
     "location": "Филхармонија, Скопје",
@@ -76,7 +40,7 @@
     "date": "2026-05-08",
     "location": "Филхармонија, Скопје",
     "category": "",
-    "image_url": "https://www.karti.com.mk/content/goranvincic.png?ver001",
+    "image_url": "https://www.karti.com.mk/content/goranvincic.png",
     "url": "https://www.karti.com.mk/goran-vincikj-vinca.nspx",
     "source": "nastani.site"
   },
@@ -85,7 +49,7 @@
     "date": "2026-05-10",
     "location": "Филхармонија, Скопје",
     "category": "",
-    "image_url": "https://www.karti.com.mk/content/zimm.jpeg?ver001",
+    "image_url": "https://www.karti.com.mk/content/zimm.jpeg",
     "url": "https://www.karti.com.mk/the-music-of-hans-zimmer-and-others.nspx",
     "source": "nastani.site"
   },
@@ -99,7 +63,7 @@
     "source": "nastani.site"
   },
   {
-    "title": "Концерт со учениците од Државните музички училишта во РС Македонија „Младите доаѓаат“",
+    "title": "Концерт со учениците од Државните музички училишта „Младите доаѓаат"",
     "date": "2026-06-04",
     "location": "Филхармонија, Скопје",
     "category": "",
@@ -119,14 +83,14 @@
   {
     "title": "Sooshi Mango",
     "date": "2026-06-06",
-    "location": "СРЦ КАЛЕ, undefined",
+    "location": "СРЦ КАЛЕ, Скопје",
     "category": "",
     "image_url": "https://drugastrana.mk/wp-content/uploads/2025/12/sm-DS.jpg",
     "url": "https://drugastrana.mk/event/sooshi-mango/",
     "source": "nastani.site"
   },
   {
-    "title": "Концерт со студентите од Државните музички академии во РС Македонија „Звукот на идната генерација“",
+    "title": "Концерт со студентите од Државните музички академии „Звукот на идната генерација"",
     "date": "2026-06-11",
     "location": "Филхармонија, Скопје",
     "category": "",
@@ -135,7 +99,7 @@
     "source": "nastani.site"
   },
   {
-    "title": "Концерт „Филхармонија на отворено“ во Градскиот парк",
+    "title": "Концерт „Филхармонија на отворено" во Градскиот парк",
     "date": "2026-06-19",
     "location": "Филхармонија, Скопје",
     "category": "",
@@ -144,21 +108,12 @@
     "source": "nastani.site"
   },
   {
-    "title": "Д Фестивал  - Еднодневен билет - 1.500 мкд",
+    "title": "Д Фестивал — Еднодневен билет — 1.500 мкд",
     "date": "2026-06-26",
-    "location": "Д фестивал 2026, undefined",
+    "location": "Д фестивал 2026, Штип",
     "category": "",
-    "image_url": "https://www.karti.com.mk/content/%D0%B4%D1%84%D0%B5%D1%81%D1%8226333.jpg?ver001",
+    "image_url": "https://www.karti.com.mk/content/%D0%B4%D1%84%D0%B5%D1%81%D1%8226333.jpg",
     "url": "https://www.karti.com.mk/d-festival-2026.nspx",
-    "source": "nastani.site"
-  },
-  {
-    "title": "Д фестивал 2026",
-    "date": "2026-06-26",
-    "location": "Штип, undefined",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2025/11/%D0%B4%D1%84%D0%B5%D1%81%D1%8226.jpg",
-    "url": "https://mktickets.mk/event/d-festival-2026/",
     "source": "nastani.site"
   },
   {
@@ -166,7 +121,7 @@
     "date": "2026-06-27",
     "location": "С.Ц. Борис Трајковски, Скопје",
     "category": "",
-    "image_url": "https://www.kupikarta.com/images/event/5706.jpg?v=93dc1e9c-1890-4397-b306-6ada50077375",
+    "image_url": "https://www.kupikarta.com/images/event/5706.jpg",
     "url": "https://www.kupikarta.com/event-details.nspx?eventid=5706",
     "source": "nastani.site"
   },
@@ -175,7 +130,7 @@
     "date": "2026-07-21",
     "location": "АРМ Стадион, Скопје",
     "category": "",
-    "image_url": "https://www.karti.com.mk/content/JOSSSTONE333777.jpg?ver001",
+    "image_url": "https://www.karti.com.mk/content/JOSSSTONE333777.jpg",
     "url": "https://www.karti.com.mk/joss-stone.nspx",
     "source": "nastani.site"
   },
@@ -191,55 +146,73 @@
   {
     "title": "DEEP PURPLE",
     "date": "2026-10-11",
-    "location": "Спортски Центар \"Борис Трајковски\", undefined",
+    "location": "Спортски Центар „Борис Трајковски", Скопје",
     "category": "",
     "image_url": "https://avalonbooking.mk/images/event/1815.jpg",
     "url": "https://avalonbooking.mk/event-details-mk.nspx?eventid=1815",
     "source": "nastani.site"
   },
   {
-    "title": "VIP PACKAGE - DEEP PURPLE",
-    "date": "2026-10-11",
-    "location": "Спортски Центар \"Борис Трајковски\", undefined",
-    "category": "",
-    "image_url": "https://avalonbooking.mk/images/event/1816.jpg",
-    "url": "https://avalonbooking.mk/event-details-mk.nspx?eventid=1816",
-    "source": "nastani.site"
+    "title": "Скопје — Ballet Magnificat — Хуманитарен концерт за настраданите од пожарот во Кочани",
+    "date": "2026-04-17",
+    "location": "МКЦ Фросина, Скопје",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/kocani333.jpg",
+    "url": "https://www.karti.com.mk/ballet-magnificat-humanitaren-koncert-za-nastradanite-od-pozarot-vo-kocani-skopje.nspx",
+    "source": "karti.com.mk"
   },
   {
-    "title": "Protected: t",
-    "date": "2026-12-08",
-    "location": "undefined, undefined",
-    "category": "",
-    "image_url": "https://drugastrana.mk/wp-content/uploads/2024/10/bojan_veleski_n2.jpg",
-    "url": "https://drugastrana.mk/event/t/",
-    "source": "nastani.site"
+    "title": "THCF",
+    "date": "2026-04-18",
+    "location": "Спортска сала Јане Сандански, Скопје",
+    "category": "sport",
+    "image_url": "https://www.karti.com.mk/content/thcf333.png",
+    "url": "https://www.karti.com.mk/thcf.nspx",
+    "source": "karti.com.mk"
   },
   {
-    "title": "Večeras smo sami",
-    "date": "2026-04-16",
-    "location": "Центар за култура - Трајко Прокопиев",
+    "title": "ПОТОЧИЊА 2026",
+    "date": "2026-04-18",
+    "location": "Национална Опера и Балет, Скопје",
     "category": "theater",
-    "image_url": "https://www.karti.com.mk/content/vecerassmosami333.jpg?ver001",
-    "url": "https://www.karti.com.mk/ve-eras-smo-sami.nspx",
+    "image_url": "https://www.karti.com.mk/content/potocinja333.jpg",
+    "url": "https://www.karti.com.mk/potocinja26.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "DURAN DURAN",
-    "date": "2026-07-02",
+    "title": "Штип — Ballet Magnificat — Хуманитарен концерт за настраданите од пожарот во Кочани",
+    "date": "2026-04-20",
+    "location": "НУ Центар за култура „Ацо Шопов"",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/kocani333.jpg",
+    "url": "https://www.karti.com.mk/ballet-magnificat-humanitaren-koncert-za-nastradanite-od-pozarot-vo-kocani-shtip.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "Кочани — Ballet Magnificat — Хуманитарен концерт за настраданите од пожарот во Кочани",
+    "date": "2026-04-22",
+    "location": "НУ Центар за култура „Бели Мугри"",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/kocani333.jpg",
+    "url": "https://www.karti.com.mk/ballet-magnificat-humanitaren-koncert-za-nastradanite-od-pozarot-vo-kocani-kocani.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "LVBEL C5",
+    "date": "2026-04-22",
+    "location": "Арена Јане Сандански, Скопје",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/lvbel333.jpg",
+    "url": "https://www.karti.com.mk/lvbel-c5.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "САЕМ НА КНИГА",
+    "date": "2026-04-23",
     "location": "Арена Борис Трајковски, Скопје",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/duran.jpg?ver001",
-    "url": "https://www.karti.com.mk/duran-duran.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "АРХАНГЕЛ",
-    "date": "2026-06-13",
-    "location": "АРМ Стадион",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/Arhangel.png?ver001",
-    "url": "https://www.karti.com.mk/arhangel.nspx",
+    "category": "festivals",
+    "image_url": "https://www.karti.com.mk/content/saem26333.jpg",
+    "url": "https://www.karti.com.mk/saem-na-kniga-2026.nspx",
     "source": "karti.com.mk"
   },
   {
@@ -247,7 +220,7 @@
     "date": "2026-04-24",
     "location": "Филхармонија, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/bestbeat333.png?ver001",
+    "image_url": "https://www.karti.com.mk/content/bestbeat333.png",
     "url": "https://www.karti.com.mk/the-best-beat-the-beatles-tribute-band.nspx",
     "source": "karti.com.mk"
   },
@@ -256,62 +229,17 @@
     "date": "2026-04-29",
     "location": "Хотел Мериот",
     "category": "other",
-    "image_url": "https://www.karti.com.mk/content/dispurt7777.jpg?ver001",
+    "image_url": "https://www.karti.com.mk/content/dispurt7777.jpg",
     "url": "https://www.karti.com.mk/disrupthr-skopje-4-0.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "Скопје - Ballet Magnificat - Хуманитарен концерт за настраданите од пожарот во Кочани",
-    "date": "2026-04-17",
-    "location": "МКЦ Фросина, Скопје",
+    "title": "Горан Винчиќ Винча",
+    "date": "2026-05-08",
+    "location": "Филхармонија, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/kocani333.jpg?ver001",
-    "url": "https://www.karti.com.mk/ballet-magnificat-humanitaren-koncert-za-nastradanite-od-pozarot-vo-kocani-skopje.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "Штип - Ballet Magnificat - Хуманитарен концерт за настраданите од пожарот во Кочани",
-    "date": "2026-04-20",
-    "location": "НУ Центар за култура „Ацо Шопов“",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/kocani333.jpg?ver001",
-    "url": "https://www.karti.com.mk/ballet-magnificat-humanitaren-koncert-za-nastradanite-od-pozarot-vo-kocani-shtip.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "Кочани - Ballet Magnificat - Хуманитарен концерт за настраданите од пожарот во Кочани",
-    "date": "2026-04-22",
-    "location": "НУ Центар за култура „Бели Мугри“",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/kocani333.jpg?ver001",
-    "url": "https://www.karti.com.mk/ballet-magnificat-humanitaren-koncert-za-nastradanite-od-pozarot-vo-kocani-kocani.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "THCF",
-    "date": "2026-04-18",
-    "location": "Спортска сала Јане Сандански, Скопје",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/thcf333.png?ver001",
-    "url": "https://www.karti.com.mk/thcf.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "DEEP PURPLE",
-    "date": "2026-10-11",
-    "location": "ARENA BORIS TRAJKOVSKI",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/dsda_1.jpg?ver001",
-    "url": "https://www.karti.com.mk/deep-purple.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "LVBEL C5",
-    "date": "2026-04-22",
-    "location": "Арена Јане Сандански, Скопје",
-    "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/lvbel333.jpg?ver001",
-    "url": "https://www.karti.com.mk/lvbel-c5.nspx",
+    "image_url": "https://www.karti.com.mk/content/goranvincic333.png",
+    "url": "https://www.karti.com.mk/goran-vincikj-vinca.nspx",
     "source": "karti.com.mk"
   },
   {
@@ -319,7 +247,7 @@
     "date": "2026-05-10",
     "location": "Филхармонија, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/LOTRrr.jpeg?ver001",
+    "image_url": "https://www.karti.com.mk/content/LOTRrr.jpeg",
     "url": "https://www.karti.com.mk/the-lord-of-the-rings-the-hobbit-in-concert.nspx",
     "source": "karti.com.mk"
   },
@@ -328,8 +256,17 @@
     "date": "2026-05-10",
     "location": "Филхармонија, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/zimm.jpeg?ver001",
+    "image_url": "https://www.karti.com.mk/content/zimm.jpeg",
     "url": "https://www.karti.com.mk/the-music-of-hans-zimmer-and-others.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "GUITARI BARO / BCUC @OFFest 2026",
+    "date": "2026-06-03",
+    "location": "Национална Опера и Балет, Скопје",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/GUITAR.jpg",
+    "url": "https://www.karti.com.mk/guitari-baro-bcuc-offest-2026.nspx",
     "source": "karti.com.mk"
   },
   {
@@ -337,44 +274,26 @@
     "date": "2026-06-04",
     "location": "Block 40 Business Center, Наум Наумовски Борче 40",
     "category": "other",
-    "image_url": "https://www.karti.com.mk/content/tru777.png?ver001",
+    "image_url": "https://www.karti.com.mk/content/tru777.png",
     "url": "https://www.karti.com.mk/tru-skopje26.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "ПОТОЧИЊА 2026",
-    "date": "2026-04-19",
-    "location": "Национална Опера и Балет, Скопје",
-    "category": "festivals",
-    "image_url": "https://www.karti.com.mk/content/potocinja333.jpg?ver001",
-    "url": "https://www.karti.com.mk/potocinja26.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "Lord of the Dance",
-    "date": "2026-04-07",
-    "location": "Спортска сала, Јане Сандански",
+    "title": "ELIS & TOM – It had to be you @OFFest 2026",
+    "date": "2026-06-06",
+    "location": "Кино Фросина, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/kojkoga.jpg?ver001",
-    "url": "https://www.karti.com.mk/lord-of-the-dance-07-04.nspx",
+    "image_url": "https://www.karti.com.mk/content/ELIS.jpg",
+    "url": "https://www.karti.com.mk/elis-tom-it-had-to-be-you-offest-2026.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "Горан Винчиќ Винча",
-    "date": "2026-05-08",
-    "location": "Филхармонија, Скопје",
-    "category": "philharmonic",
-    "image_url": "https://www.karti.com.mk/content/goranvincic333.png?ver001",
-    "url": "https://www.karti.com.mk/goran-vincikj-vinca.nspx",
-    "source": "karti.com.mk"
-  },
-  {
-    "title": "JOSS STONE",
-    "date": "2026-07-21",
-    "location": "АРМ Стадион",
+    "title": "MATCHUME ZANGO / ZAWOSE QUEENS @OFFest 2026",
+    "date": "2026-06-06",
+    "location": "Младински Културен Центар, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/JOSSSTONE333777.jpg?ver001",
-    "url": "https://www.karti.com.mk/joss-stone.nspx",
+    "image_url": "https://www.karti.com.mk/content/MATCHUM.jpg",
+    "url": "https://www.karti.com.mk/matchume-zango-zawose-queens-offest-2026.nspx",
     "source": "karti.com.mk"
   },
   {
@@ -382,17 +301,62 @@
     "date": "2026-06-06",
     "location": "Арена Борис Трајковски, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/Banercopi.png?ver001",
+    "image_url": "https://www.karti.com.mk/content/Banercopi.png",
     "url": "https://www.karti.com.mk/jovan-jovanov-elvir-mekikj-i-prijatelite.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "ЈАКОВ ЈОЗИНОВИЌ „Ja za čuda letim“",
-    "date": "2026-04-09",
-    "location": "СЦ Јане Сандански, Скопје",
+    "title": "АРХАНГЕЛ",
+    "date": "2026-06-13",
+    "location": "АРМ Стадион",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/ioo.jpg?ver001",
-    "url": "https://www.karti.com.mk/jakov-jozinovikj-ja-za-uda-letim.nspx",
+    "image_url": "https://www.karti.com.mk/content/Arhangel.png",
+    "url": "https://www.karti.com.mk/arhangel.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "Д фестивал 2026",
+    "date": "2026-06-26",
+    "location": "Штип",
+    "category": "festivals",
+    "image_url": "https://www.karti.com.mk/content/%D0%B4%D1%84%D0%B5%D1%81%D1%8226333.jpg",
+    "url": "https://www.karti.com.mk/d-festival-2026.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "DURAN DURAN",
+    "date": "2026-07-02",
+    "location": "Арена Борис Трајковски, Скопје",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/duran.jpg",
+    "url": "https://www.karti.com.mk/duran-duran.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "JOSS STONE",
+    "date": "2026-07-21",
+    "location": "АРМ Стадион",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/JOSSSTONE333777.jpg",
+    "url": "https://www.karti.com.mk/joss-stone.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "СФЕСТ ФЕСТИВАЛ",
+    "date": "2026-07-24",
+    "location": "Скопје",
+    "category": "festivals",
+    "image_url": "https://mktickets.mk/wp-content/uploads/2026/03/sfest.png",
+    "url": "https://mktickets.mk/event/sfest/",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "TEA TAIROVIC",
+    "date": "2026-07-25",
+    "location": "ЕГОИСТ, ОХРИД",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/teat.jpg",
+    "url": "https://www.karti.com.mk/tea-tairovicc.nspx",
     "source": "karti.com.mk"
   },
   {
@@ -400,26 +364,35 @@
     "date": "2026-07-25",
     "location": "АРМ Стадион",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/kraftwerk333.jpeg?ver001",
+    "image_url": "https://www.karti.com.mk/content/kraftwerk333.jpeg",
     "url": "https://www.karti.com.mk/kraftwerk.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "Ezhel Live in Europe 2026",
-    "date": "2026-11-17",
-    "location": "Младински Културен Центар, Скопје",
+    "title": "Music Week presents Jala Brat & Buba Corelli – GOAT Tour",
+    "date": "2026-07-31",
+    "location": "ЕГОИСТ, ОХРИД",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/qqqqeeqqq.jpg?ver001",
-    "url": "https://www.karti.com.mk/ezhel-live-in-europe-2026.nspx",
+    "image_url": "https://www.karti.com.mk/content/dasdasdfa.jpg",
+    "url": "https://www.karti.com.mk/music-week-presents-jala-brat-buba-corelli-goat-tour.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "Д фестивал 2026",
-    "date": "2026-06-28",
-    "location": "Штип",
-    "category": "festivals",
-    "image_url": "https://www.karti.com.mk/content/дфест26333.jpg?ver001",
-    "url": "https://www.karti.com.mk/d-festival-2026.nspx",
+    "title": "Zdravko Čolić",
+    "date": "2026-08-01",
+    "location": "Стадион Петар Милошевски, Битола",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/zdravko.jpg",
+    "url": "https://www.karti.com.mk/zdravko-oli.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "STEVE AOKI",
+    "date": "2026-08-02",
+    "location": "Стадион Петар Милошевски, Битола",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/steveaoki.jpg",
+    "url": "https://www.karti.com.mk/steve-aoki.nspx",
     "source": "karti.com.mk"
   },
   {
@@ -427,225 +400,117 @@
     "date": "2026-10-02",
     "location": "МКЦ Дансинг сала, Скопје",
     "category": "concerts",
-    "image_url": "https://www.karti.com.mk/content/autechre333.jpeg?ver001",
+    "image_url": "https://www.karti.com.mk/content/autechre333.jpeg",
     "url": "https://www.karti.com.mk/autechre.nspx",
     "source": "karti.com.mk"
   },
   {
-    "title": "Aleksandar & Dac",
-    "date": "2026-04-07",
-    "location": "Tribeca",
+    "title": "DEEP PURPLE",
+    "date": "2026-10-11",
+    "location": "ARENA BORIS TRAJKOVSKI",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/dsda_1.jpg",
+    "url": "https://www.karti.com.mk/deep-purple.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "Ezhel Live in Europe 2026",
+    "date": "2026-11-17",
+    "location": "Младински Културен Центар, Скопје",
+    "category": "concerts",
+    "image_url": "https://www.karti.com.mk/content/qqqqeeqqq.jpg",
+    "url": "https://www.karti.com.mk/ezhel-live-in-europe-2026.nspx",
+    "source": "karti.com.mk"
+  },
+  {
+    "title": "Pop Art Band",
+    "date": "2026-04-17",
+    "location": "Tribeca, Скопје",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZGs9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d3b0778eac65da4d8b7a9c8a04c3d5df1f21847c/tribeca.png",
-    "url": "https://www.kadevecer.online/events/tribeca-aleksandar-dac-07-04-2026-nightlife-skopje",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBdk91IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d44d446cc43c4dfd5a4b6f53dfceff5e93782bcd/670677792_18108498880856800_6103038500027943813_n.jpg",
+    "url": "https://www.kadevecer.online/events/tribeca-pop-art-band-17-04-2026-nightlife-skopje",
     "source": "kadevecer.online"
   },
   {
-    "title": "Cabaret show",
-    "date": "2026-04-10",
-    "location": "Gold Felicia Tetovo",
+    "title": "Live DJ",
+    "date": "2026-04-17",
+    "location": "Three Kitchen Bar, Скопје",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa0dsIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d404094ff8c011365ad946e582343ab9f6d2df8e/IMG_7705.jpeg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-tetovo-cabaret-show-10-04-2026-nightlife-tetovo",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZyt2IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--88f103a62ffd04abe644c6557c631f10452fff13/IMG_9161.webp",
+    "url": "https://www.kadevecer.online/events/three-kitchen-bar-live-dj-17-04-2026-nightlife-skopje",
     "source": "kadevecer.online"
   },
   {
-    "title": "Live Concert",
-    "date": "2026-04-10",
-    "location": "Gold Felicia",
+    "title": "Plan G Band",
+    "date": "2026-04-17",
+    "location": "Tribeca, Скопје",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0440e0aff098f54aecf01aededf19c1ac7588186/Screenshot_20220515-110850_Chrome.jpg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-live-concert-10-04-2026-nightlife-bitola",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBdk91IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d44d446cc43c4dfd5a4b6f53dfceff5e93782bcd/670677792_18108498880856800_6103038500027943813_n.jpg",
+    "url": "https://www.kadevecer.online/events/tribeca-plan-g-band-17-04-2026-nightlife-skopje",
     "source": "kadevecer.online"
   },
   {
-    "title": "Sasa Matic",
-    "date": "2026-04-10",
-    "location": "Club Mirage",
+    "title": "Live Music",
+    "date": "2026-04-17",
+    "location": "Record Pub, Струмица",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/assets/default-no-cover-2ab01fa062552ead308227647c7c9230ec55e3c1fbff2ecab42a0006cb786b4e.jpg",
-    "url": "https://www.kadevecer.online/events/club-mirage-sasa-matic-10-04-2026-nightlife-strumica",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaCt2IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--4916d3950c610b0ba942ea9fff590c8a9825ab12/672441183_18087456893606795_2611340525118685737_n.jpg",
+    "url": "https://www.kadevecer.online/events/record-pub-live-music-17-04-2026-nightlife-strumica",
     "source": "kadevecer.online"
   },
   {
-    "title": "Live Concert",
-    "date": "2026-04-10",
-    "location": "INclusive Disco",
+    "title": "The Groove",
+    "date": "2026-04-17",
+    "location": "Institute Club, Кичево",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa0FSIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--47efedb319807c4cdeb7a5ab8b0aab1e7fe3c227/Untitled%20design.png",
-    "url": "https://www.kadevecer.online/events/inclusive-disco-live-concert-10-04-2026-nightlife-ohrid",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaHF2IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--4fb13dd0a8572b945088890e6ac5eb559334a39a/670923692_18075515180560485_1656732097047906267_n.heic",
+    "url": "https://www.kadevecer.online/events/institute-club-the-groove-17-04-2026-nightlife-kichevo",
     "source": "kadevecer.online"
   },
   {
-    "title": "Cabaret show",
-    "date": "2026-04-11",
-    "location": "Gold Felicia",
+    "title": "Live DJ",
+    "date": "2026-04-17",
+    "location": "The Public, Струмица",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0440e0aff098f54aecf01aededf19c1ac7588186/Screenshot_20220515-110850_Chrome.jpg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-cabaret-show-11-04-2026-nightlife-bitola",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaU92IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d391b26ea598dac8ba4679f1a74b581b444b2094/670092177_1183296567114700_1248041657320614746_n.jpg",
+    "url": "https://www.kadevecer.online/events/the-public-live-dj-17-04-2026-nightlife-strumica",
     "source": "kadevecer.online"
   },
   {
-    "title": "Live Concert",
-    "date": "2026-04-11",
-    "location": "Gold Felicia Tetovo",
+    "title": "Live Music",
+    "date": "2026-04-17",
+    "location": "Kafana \"Kafana\", Скопје",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa0dsIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d404094ff8c011365ad946e582343ab9f6d2df8e/IMG_7705.jpeg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-tetovo-live-concert-11-04-2026-nightlife-tetovo",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa2l2IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9b9a2cea2a3d6de14b452ded1a05511d365ae9f2/670419619_18072298919655700_5832316392090175842_n.jpg",
+    "url": "https://www.kadevecer.online/events/kafana-kafana-live-music-17-04-2026-nightlife-skopje",
     "source": "kadevecer.online"
   },
   {
-    "title": "Caki Kismi",
-    "date": "2026-04-11",
-    "location": "Kafana \"Kafana\"",
+    "title": "Live Music",
+    "date": "2026-04-17",
+    "location": "Juzna Pruga, Скопје",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBbEVGIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--17b7661e999d985bc4e263bba3664fac04968b42/viber_image_2022-06-29_01-46-12-118.jpg",
-    "url": "https://www.kadevecer.online/events/kafana-kafana-caki-kismi-11-04-2026-nightlife-skopje",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaG12IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c6303b5765993993f654d4b9033e003dfb86ea5b/669811821_17955439905102190_7544066616359472989_n.jpg",
+    "url": "https://www.kadevecer.online/events/juzna-pruga-live-music-17-04-2026-nightlife-skopje",
     "source": "kadevecer.online"
   },
   {
-    "title": "Ivona Jo",
-    "date": "2026-04-11",
-    "location": "Rasčekor",
+    "title": "Grupa Melem",
+    "date": "2026-04-17",
+    "location": "Restoran Iv, Скопје",
     "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcG9OIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--78666aee08ff8f501789653e755eb88adeb14a6c/88658DD8-64CF-4FFB-A4C5-21DB4EF759A0.jpeg",
-    "url": "https://www.kadevecer.online/events/rascekor-ivona-jo-11-04-2026-nightlife-bitola",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "Breskvica",
-    "date": "2026-04-11",
-    "location": "Club Mirage",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/assets/default-no-cover-2ab01fa062552ead308227647c7c9230ec55e3c1fbff2ecab42a0006cb786b4e.jpg",
-    "url": "https://www.kadevecer.online/events/club-mirage-breskvica-11-04-2026-nightlife-strumica",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "Lozano",
-    "date": "2026-04-12",
-    "location": "Plan B Caffe",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaHdQIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--24db68a63f4e74a617d29cb84b600516353c3ba2/A4EE1F0B-2CB9-4D00-BE3C-7DE5DF999682.jpeg",
-    "url": "https://www.kadevecer.online/events/plan-b-caffe-lozano-12-04-2026-nightlife-sv-nikole",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "Live Concert",
-    "date": "2026-04-12",
-    "location": "Gold Felicia Tetovo",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa0dsIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d404094ff8c011365ad946e582343ab9f6d2df8e/IMG_7705.jpeg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-tetovo-live-concert-12-04-2026-nightlife-tetovo",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "Live Concert",
-    "date": "2026-04-12",
-    "location": "Gold Felicia",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0440e0aff098f54aecf01aededf19c1ac7588186/Screenshot_20220515-110850_Chrome.jpg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-live-concert-12-04-2026-nightlife-bitola",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "DJ Nikifor",
-    "date": "2026-04-12",
-    "location": "Rasčekor",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcG9OIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--78666aee08ff8f501789653e755eb88adeb14a6c/88658DD8-64CF-4FFB-A4C5-21DB4EF759A0.jpeg",
-    "url": "https://www.kadevecer.online/events/rascekor-dj-nikifor-12-04-2026-nightlife-bitola",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "StandUp",
-    "date": "2026-04-16",
-    "location": "Public Room",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBclFMIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6256d930cf732f7a711e4216c0f9436fa4fe4ec7/WhatsApp%20Image%202022-10-12%20at%2012.45.00%20AM.jpeg",
-    "url": "https://www.kadevecer.online/events/public-room-standup-16-04-2026-nightlife-skopje",
+    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBbFd2IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--419ae76f27bf42c9d9db967224333bf1d56a418f/671656687_935072812605185_1345296737083164215_n.jpg",
+    "url": "https://www.kadevecer.online/events/restoran-iv-grupa-melem-17-04-2026-nightlife-skopje",
     "source": "kadevecer.online"
   },
   {
     "title": "Live Concert",
     "date": "2026-04-17",
-    "location": "Gold Felicia",
+    "location": "Gold Felicia, Битола",
     "category": "Nightlife",
     "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcklCIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--0440e0aff098f54aecf01aededf19c1ac7588186/Screenshot_20220515-110850_Chrome.jpg",
     "url": "https://www.kadevecer.online/events/gold-felicia-live-concert-17-04-2026-nightlife-bitola",
     "source": "kadevecer.online"
-  },
-  {
-    "title": "Live Concert",
-    "date": "2026-04-18",
-    "location": "Gold Felicia Tetovo",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa0dsIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d404094ff8c011365ad946e582343ab9f6d2df8e/IMG_7705.jpeg",
-    "url": "https://www.kadevecer.online/events/gold-felicia-tetovo-live-concert-18-04-2026-nightlife-tetovo",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "Kristina Jovanovic",
-    "date": "2026-04-18",
-    "location": "Mal Altan",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBandKIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6bfde9e8412defdf82c47330d707aea1e1f7df07/WhatsApp%20Image%202022-09-01%20at%203.22.50%20AM.jpeg",
-    "url": "https://www.kadevecer.online/events/mal-altan-kristina-jovanovic-18-04-2026-nightlife-skopje",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "Dva Bona",
-    "date": "2026-04-18",
-    "location": "De Facto",
-    "category": "Nightlife",
-    "image_url": "https://www.kadevecer.online/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBaUlGIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fd7c4ead2bdd62b64e107a30298ebc984507eb1e/930B210B-0025-492F-8F69-B9CDEA2E28E7.jpeg",
-    "url": "https://www.kadevecer.online/events/de-facto-dva-bona-18-04-2026-nightlife-gevgelija",
-    "source": "kadevecer.online"
-  },
-  {
-    "title": "ДРАМСКИ ТЕАТАР – МЕСЕЧЕН РЕПЕРТОАР",
-    "date": "2026-02-01",
-    "location": "",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2019/01/Untitled-1-1.jpg",
-    "url": "https://mktickets.mk/event/dramskiteatar-2/",
-    "source": "mktickets.mk"
-  },
-  {
-    "title": "Рецитал на Марија Ѓошевска",
-    "date": "2026-04-07",
-    "location": "",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2026/03/recital.jpg",
-    "url": "https://mktickets.mk/event/rmg/",
-    "source": "mktickets.mk"
-  },
-  {
-    "title": "LORD OF THE DANCE",
-    "date": "2026-04-07",
-    "location": "",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2025/10/mkticks.jpg",
-    "url": "https://mktickets.mk/event/lord-of-the-dance/",
-    "source": "mktickets.mk"
-  },
-  {
-    "title": "ЈАКОВ ЈОЗИНОВИЌ „Ja za čuda letim“",
-    "date": "2026-04-09",
-    "location": "",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2025/12/jjbaner.png",
-    "url": "https://mktickets.mk/event/jakov-jozinovic-ja-za-cuda-letim/",
-    "source": "mktickets.mk"
-  },
-  {
-    "title": "Cuban Jazz Explosion Национален џез оркестар & Alain Pérez",
-    "date": "2026-04-16",
-    "location": "",
-    "category": "",
-    "image_url": "https://mktickets.mk/wp-content/uploads/2026/03/0-02-05-ca3cdea4df30e336599b929a4a4a98412e5eccff27231d796faa6b653c292598_5c71d7de8eae511e.jpg",
-    "url": "https://mktickets.mk/event/cuban-jazz-explosion/",
-    "source": "mktickets.mk"
   },
   {
     "title": "ПОТОЧИЊА 2026",
