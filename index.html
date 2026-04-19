@@ -251,7 +251,7 @@
     onSnapshot(
       query(collection(db, 'nastani'), orderBy('datum')),
       (snap) => {
-        // Build full list for the map (all events, including past ones with lat/lng)
+        // Build filtered list for the map (today + future events with lat/lng)
         const mapEmojiMap = { klub: '🎉', koncert: '🎸', bar: '🍸', kafana: '🥃', 'sport-kultura': '⚽', kultura: '🎭' };
         const allForMap = snap.docs
           .map(doc => {
@@ -270,7 +270,7 @@
               instagramUrl: d.instagramUrl || '',
             };
           })
-          .filter(n => n.lat && n.lng);
+          .filter(n => n.lat && n.lng && n.datum >= todayStr);
 
         console.log(`[Map] Total docs: ${snap.docs.length}, with lat/lng: ${allForMap.length}`);
         allForMap.forEach(n => console.log(`  📍 ${n.title} → lat:${n.lat} lng:${n.lng}`));
