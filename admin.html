@@ -606,21 +606,23 @@
       listEl.innerHTML = '<div class="empty-list">Нема резултати</div>';
       return;
     }
-    listEl.innerHTML = filtered.map(n => {
-      const safe = encodeURIComponent(JSON.stringify(n));
-      return `
+    listEl.innerHTML = filtered.map(n => `
         <div class="event-item">
           <div class="event-info">
             <div class="event-title">${n.imgEmoji || ''} ${n.title}</div>
             <div class="event-meta">${n.place} · ${n.datum} · ${n.vreme}</div>
           </div>
           <div class="event-actions">
-            <button class="edit-btn"   onclick="editNastan('${n.id}', JSON.parse(decodeURIComponent('${safe}')))">Уреди</button>
+            <button class="edit-btn"   onclick="editNastanById('${n.id}')">Уреди</button>
             <button class="delete-btn" onclick="deleteNastan('${n.id}')">Избриши</button>
           </div>
         </div>
-      `;
-    }).join('');
+      `).join('');
+  }
+
+  function editNastanById(id) {
+    const n = allEvents.find(e => e.id === id);
+    if (n) editNastan(id, n);
   }
 
   async function deleteNastan(id) {
