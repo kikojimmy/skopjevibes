@@ -515,6 +515,26 @@
   function renderMapPins(events) {
     markersLayer.clearLayers();
     console.log(`[Map] Rendering ${events.length} pins`);
+
+    // Offset overlapping markers
+    const locationGroups = {};
+    events.forEach(n => {
+      const key = `${n.lat},${n.lng}`;
+      if (!locationGroups[key]) locationGroups[key] = [];
+      locationGroups[key].push(n);
+    });
+
+    Object.values(locationGroups).forEach(group => {
+      if (group.length > 1) {
+        const offsetStep = 0.0003;
+        group.forEach((n, i) => {
+          const angle = (2 * Math.PI * i) / group.length;
+          n.lat = n.lat + offsetStep * Math.cos(angle);
+          n.lng = n.lng + offsetStep * Math.sin(angle);
+        });
+      }
+    });
+
     events.forEach(n => {
       const color = CAT_COLORS[n.kategorija] || '#ff5c35';
       const bg    = CAT_BG[n.kategorija]    || '#1a1a1a';
