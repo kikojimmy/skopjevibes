@@ -159,6 +159,10 @@
   <div id="ai-preview-wrap" style="display:none;margin-bottom:12px">
     <img id="ai-preview" style="width:100%;border-radius:12px;max-height:300px;object-fit:contain;background:#111" />
   </div>
+  <div id="convert-btns" style="display:none;gap:8px;margin-bottom:12px">
+    <button onclick="convertImage('post')" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Post 4:5 (1080×1350)</button>
+    <button onclick="convertImage('story')" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Story 9:16 (1080×1920)</button>
+  </div>
   <button class="submit-btn" id="ai-btn" onclick="runAiAgent()" style="background:#1a1a2e;border:1px solid #ff5c35;margin-bottom:8px">✨ Пополни форма со AI</button>
   <div class="error-msg" id="ai-error">❌ AI грешка. Обиди се повторно.</div>
   <div id="ai-caption-box" style="display:none;margin-bottom:16px">
@@ -799,6 +803,7 @@
       reader.onload = e => {
         document.getElementById('ai-preview').src = e.target.result;
         document.getElementById('ai-preview-wrap').style.display = 'block';
+        document.getElementById('convert-btns').style.display = 'flex';
       };
       reader.readAsDataURL(file);
     });
@@ -866,6 +871,35 @@
       btn.disabled = false;
       btn.textContent = '✨ Пополни форма со AI';
     }
+  }
+
+  function convertImage(type) {
+    const file = document.getElementById('ai-image-input').files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const W = 1080;
+      const H = type === 'post' ? 1350 : 1920;
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext('2d');
+      const scaleBg = Math.max(W / img.width, H / img.height);
+      const bw = img.width * scaleBg, bh = img.height * scaleBg;
+      const bx = (W - bw) / 2, by = (H - bh) / 2;
+      ctx.filter = 'blur(24px)';
+      ctx.drawImage(img, bx, by, bw, bh);
+      ctx.filter = 'none';
+      const scaleFg = Math.min(W / img.width, H / img.height);
+      const iw = img.width * scaleFg, ih = img.height * scaleFg;
+      const ix = (W - iw) / 2, iy = (H - ih) / 2;
+      ctx.drawImage(img, ix, iy, iw, ih);
+      const a = document.createElement('a');
+      const name = document.getElementById('f-title').value.trim().replace(/\s+/g, '-').toLowerCase() || 'event';
+      a.download = `${name}-${type}.jpg`;
+      a.href = canvas.toDataURL('image/jpeg', 0.93);
+      a.click();
+    };
+    img.src = URL.createObjectURL(file);
   }
 </script>
 </body>
