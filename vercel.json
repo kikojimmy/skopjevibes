@@ -4,6 +4,7 @@
     { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "**/*.html", "use": "@vercel/static" },
     { "src": "**/*.css", "use": "@vercel/static" },
-    { "src": "**/*.js", "use": "@vercel/static", "config": { "exclude": ["api/**"] } }
+    { "src": "**/*.js", "use": "@vercel/static", "config": { "exclude": ["api/**"] } },
+    { "src": "*.json", "use": "@vercel/static", "config": { "exclude": ["vercel.json"] } }
   ]
 }
