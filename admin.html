@@ -160,7 +160,7 @@
     <img id="ai-preview" style="width:100%;border-radius:12px;max-height:300px;object-fit:contain;background:#111" />
   </div>
   <div id="convert-btns" style="display:none;gap:8px;margin-bottom:12px">
-    <button onclick="convertImage('post')" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Post 4:5 (1080×1350)</button>
+    <button onclick="openTemplate5(this)" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Post 4:5 (1080×1350)</button>
     <button onclick="convertImage('story')" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Story 9:16 (1080×1920)</button>
   </div>
   <button class="submit-btn" id="ai-btn" onclick="runAiAgent()" style="background:#1a1a2e;border:1px solid #ff5c35;margin-bottom:8px">✨ Пополни форма со AI</button>
@@ -871,6 +871,26 @@
       btn.disabled = false;
       btn.textContent = '✨ Пополни форма со AI';
     }
+  }
+
+  function openTemplate5(btn) {
+    const MK_DAYS = ['Недела','Понеделник','Вторник','Среда','Четврток','Петок','Сабота'];
+    const place = document.getElementById('f-place').value.trim();
+    const time  = document.getElementById('f-vreme').value.trim();
+    const day   = document.getElementById('f-day').value;
+    const month = document.getElementById('f-month').value;
+    const year  = document.getElementById('f-year').value;
+    const dateObj = new Date(`${year}-${month}-${day}T00:00:00`);
+    const dateStr = `${MK_DAYS[dateObj.getDay()]}, ${parseInt(day, 10)} ${MK_MONTHS[parseInt(month, 10) - 1]}`;
+    const img = document.getElementById('ai-preview').src;
+
+    localStorage.setItem('t5_place', place);
+    localStorage.setItem('t5_time', time);
+    localStorage.setItem('t5_date', dateStr);
+    if (img) localStorage.setItem('t5_img', img);
+
+    window.open('templates.html', '_blank');
+    btn.textContent = '📥 Симни со Template 5';
   }
 
   function convertImage(type) {

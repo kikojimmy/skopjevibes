@@ -437,6 +437,34 @@ async function download(postId, btnId, filename) {
   btn.disabled    = false;
   btn.textContent = '⬇ Симни слика (1080×1080)';
 }
+
+// Prefill Template 5 from admin panel (AI agent "Post" button)
+(function() {
+  const place = localStorage.getItem('t5_place');
+  const time  = localStorage.getItem('t5_time');
+  const date  = localStorage.getItem('t5_date');
+  const img   = localStorage.getItem('t5_img');
+
+  if (!place && !time && !date && !img) return;
+
+  if (place) document.getElementById('t5-loc').value  = place;
+  if (time)  document.getElementById('t5-time').value = time;
+  if (date)  document.getElementById('t5-date').value = date;
+  updateT5();
+
+  if (img) {
+    const bgImg = document.getElementById('t5-bg-img');
+    bgImg.src = img;
+    bgImg.style.display = 'block';
+    document.getElementById('t5-placeholder').style.display = 'none';
+    document.getElementById('t5-img-clear').style.display = 'block';
+  }
+
+  localStorage.removeItem('t5_place');
+  localStorage.removeItem('t5_time');
+  localStorage.removeItem('t5_date');
+  localStorage.removeItem('t5_img');
+})();
 </script>
 </body>
 </html>
