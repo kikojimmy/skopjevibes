@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
 
   const prompt = `This is a screenshot of an Instagram post about a nightlife event in Skopje, Macedonia. Today's date is ${today}.
 
-Read all text visible in the image and extract event data. Return ONLY valid JSON, no markdown, no explanation:
+Read all text visible in the image and extract event data. Always return the venue/place name in Latin script (not Cyrillic). Return ONLY valid JSON, no markdown, no explanation:
 {
   "title": "event name",
   "place": "venue name",

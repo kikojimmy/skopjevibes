@@ -328,6 +328,43 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 <script>
+  const VENUE_LOOKUP = {
+    "Tribeca Park":            { lat: 42.0073735,  lng: 21.4115211 },
+    "Tribeca":                 { lat: 42.0073735,  lng: 21.4115211 },
+    "Cresha Bar":              { lat: 41.9986507,  lng: 21.4187324 },
+    "Crash Bar":               { lat: 42.0007462,  lng: 21.4270963 },
+    "El Presidente":           { lat: 41.9965597,  lng: 21.4292662 },
+    "Saloon":                  { lat: 41.9936502,  lng: 21.4252128 },
+    "Public Room":             { lat: 41.9899429,  lng: 21.4259388 },
+    "Arena Boris Trajkovski":  { lat: 42.009527,   lng: 21.4040192 },
+    "Cafe Bar Martini":        { lat: 42.0031844,  lng: 21.4000883 },
+    "Mono Bar":                { lat: 41.9908904,  lng: 21.4274274 },
+    "Kafana Ilinden":          { lat: 41.9973345,  lng: 21.5736039 },
+    "Beertija Pub":            { lat: 41.9940862,  lng: 21.4342779 },
+    "Intermezzo Music Bar":    { lat: 41.9947478,  lng: 21.4140648 },
+    "Ragusa360":               { lat: 41.9895782,  lng: 21.432125  },
+    "Centar Bar":              { lat: 41.9948474,  lng: 21.4287737 },
+    "Jane Sandanski":          { lat: 41.9932534,  lng: 21.4645728 },
+    "Club Exit":               { lat: 42.0007,     lng: 21.4048    },
+    "Colosseum":               { lat: 42.0015,     lng: 21.4257    },
+    "Club Havana":             { lat: 41.9956,     lng: 21.4238    },
+    "Marakana":                { lat: 42.0012,     lng: 21.4264    },
+    "Chair":                   { lat: 42.0010,     lng: 21.4183    },
+    "MKC":                     { lat: 41.9978,     lng: 21.4247    },
+    "Kale":                    { lat: 42.0044,     lng: 21.4248    },
+  };
+
+  function lookupVenueCoords(placeName) {
+    if (!placeName) return null;
+    const name = placeName.trim().toLowerCase();
+    for (const key of Object.keys(VENUE_LOOKUP)) {
+      if (name.includes(key.toLowerCase()) || key.toLowerCase().includes(name)) {
+        return VENUE_LOOKUP[key];
+      }
+    }
+    return null;
+  }
+
   const firebaseConfig = {
     apiKey: "AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E",
     authDomain: "skopjevibes-df97b.firebaseapp.com",
@@ -866,6 +903,12 @@
 
       if (parsed.title)        document.getElementById('f-title').value      = parsed.title;
       if (parsed.place)        document.getElementById('f-place').value      = parsed.place;
+      const coords = lookupVenueCoords(parsed.place);
+      if (coords) {
+        document.getElementById('f-lat').value = coords.lat;
+        document.getElementById('f-lng').value = coords.lng;
+        showCoordMap(coords.lat, coords.lng);
+      }
       if (parsed.kategorija)   document.getElementById('f-kategorija').value = parsed.kategorija;
       if (parsed.vreme)        document.getElementById('f-vreme').value      = parsed.vreme;
       if (parsed.badge)        document.getElementById('f-badge').value      = parsed.badge;
