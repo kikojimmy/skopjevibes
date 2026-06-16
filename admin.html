@@ -359,7 +359,7 @@
     const name = placeName.trim().toLowerCase();
     for (const key of Object.keys(VENUE_LOOKUP)) {
       if (name.includes(key.toLowerCase()) || key.toLowerCase().includes(name)) {
-        return VENUE_LOOKUP[key];
+        return { ...VENUE_LOOKUP[key], canonicalName: key };
       }
     }
     return null;
@@ -905,6 +905,7 @@
       if (parsed.place)        document.getElementById('f-place').value      = parsed.place;
       const coords = lookupVenueCoords(parsed.place);
       if (coords) {
+        document.getElementById('f-place').value = coords.canonicalName;
         document.getElementById('f-lat').value = coords.lat;
         document.getElementById('f-lng').value = coords.lng;
         showCoordMap(coords.lat, coords.lng);
