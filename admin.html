@@ -164,8 +164,14 @@
     <button onclick="convertImage('story')" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Story 9:16 (1080×1920)</button>
   </div>
   <div id="t5-preview-wrap" style="display:none;margin-bottom:16px">
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input id="t5-edit-place" placeholder="Локација" style="flex:1;background:#161616;border:1px solid #2a2a2a;color:#f5f0e8;padding:8px 12px;border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif">
+      <input id="t5-edit-time" placeholder="Време" style="width:80px;background:#161616;border:1px solid #2a2a2a;color:#f5f0e8;padding:8px 12px;border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif">
+      <input id="t5-edit-date" placeholder="Датум" style="flex:1;background:#161616;border:1px solid #2a2a2a;color:#f5f0e8;padding:8px 12px;border-radius:10px;font-size:13px;font-family:'DM Sans',sans-serif">
+    </div>
+    <button onclick="applyT5Edits()" style="width:100%;background:#1a1a2e;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px;margin-bottom:10px">🔄 Примени промени</button>
     <div id="t5-post" style="position:relative;width:100%;aspect-ratio:1/1;background:#0d0d0d;overflow:hidden;border-radius:12px">
-      <img id="t5-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:none">
+      <img id="t5-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#0d0d0d;display:none">
       <div id="t5-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;background:#111;display:flex;align-items:center;justify-content:center"><span style="color:#333;font-size:13px">📷 Додај слика</span></div>
       <div style="position:absolute;bottom:0;left:0;right:0;height:52px;padding:0 16px;border-top:1px solid #222;display:flex;justify-content:space-between;align-items:center;background:#0d0d0d">
         <span id="t5-loc-preview" contenteditable="true" style="color:#777;font-size:11px;font-family:'DM Sans',sans-serif;outline:none;border-bottom:1px dashed transparent;transition:border-color 0.2s" onmouseover="this.style.borderBottomColor='#555'" onmouseout="this.style.borderBottomColor='transparent'">📍 · </span>
@@ -893,8 +899,14 @@
     const month = document.getElementById('f-month').value;
     const MK_MONTHS_LOCAL = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
     const dateStr = `${parseInt(day)} ${MK_MONTHS_LOCAL[parseInt(month)-1]}`;
+
+    document.getElementById('t5-edit-place').value = place;
+    document.getElementById('t5-edit-time').value  = time;
+    document.getElementById('t5-edit-date').value  = dateStr;
+
     document.getElementById('t5-loc-preview').textContent = `📍 ${place} · ${time}`;
     document.getElementById('t5-date-preview').textContent = `📅 ${dateStr}`;
+
     if (file) {
       const url = URL.createObjectURL(file);
       const bg = document.getElementById('t5-bg');
@@ -904,6 +916,14 @@
     }
     document.getElementById('t5-preview-wrap').style.display = 'block';
     document.getElementById('t5-preview-wrap').scrollIntoView({behavior:'smooth'});
+  }
+
+  function applyT5Edits() {
+    const place = document.getElementById('t5-edit-place').value.trim();
+    const time = document.getElementById('t5-edit-time').value.trim();
+    const date = document.getElementById('t5-edit-date').value.trim();
+    if (place || time) document.getElementById('t5-loc-preview').textContent = `📍 ${place} · ${time}`;
+    if (date) document.getElementById('t5-date-preview').textContent = `📅 ${date}`;
   }
 
   function downloadT5() {
