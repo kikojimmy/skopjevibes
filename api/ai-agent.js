@@ -30,7 +30,7 @@ Read all text visible in the image and extract event data. Always return the ven
   "badge": "entry price or free entry info, or empty string",
   "desc": "short description in Macedonian, max 100 chars",
   "instagramUrl": "instagram URL if visible, else empty string",
-  "caption": "generated Instagram caption in Macedonian with emojis, hook line with no ending punctuation, then venue + date + time with emojis, then reservation contact if found, then hashtags: #skopje #скопје #SkopjeVibes #skopjevibes #ноќенживот"
+  "caption": "Instagram caption in Macedonian in this EXACT format (no deviations):\n🎸 [hook sentence about the event, no ending punctuation]\n\n📍 [venue] · [time] · [date in Macedonian e.g. 5 Maj]\n📞 Резервации: [phone number if visible, else omit this line entirely]\n\nСите настани 👉 skopjevibes.vercel.app\n\n#skopje #skopjevibes #скопје #skopjenightlife #skopjeevents"
 }
 
 If a field is not found, use empty string. For kategorija, guess from context. For datum, if only day/month visible, use next upcoming date.`;
