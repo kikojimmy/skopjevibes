@@ -160,8 +160,20 @@
     <img id="ai-preview" style="width:100%;border-radius:12px;max-height:300px;object-fit:contain;background:#111" />
   </div>
   <div id="convert-btns" style="display:none;gap:8px;margin-bottom:12px">
-    <button onclick="openTemplate5(this)" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Post 4:5 (1080×1350)</button>
+    <button onclick="openTemplate5()" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">📥 Симни со Template 5</button>
     <button onclick="convertImage('story')" style="flex:1;background:none;border:1px solid #ff5c35;color:#ff5c35;padding:10px;border-radius:10px;cursor:pointer;font-size:13px">⬇️ Story 9:16 (1080×1920)</button>
+  </div>
+  <div id="t5-preview-wrap" style="display:none;margin-bottom:16px">
+    <div id="t5-post" style="position:relative;width:100%;aspect-ratio:1/1;background:#0d0d0d;overflow:hidden;border-radius:12px">
+      <img id="t5-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:none">
+      <div id="t5-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;background:#111;display:flex;align-items:center;justify-content:center"><span style="color:#333;font-size:13px">📷 Додај слика</span></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:52px;padding:0 16px;border-top:1px solid #222;display:flex;justify-content:space-between;align-items:center;background:#0d0d0d">
+        <span id="t5-loc-preview" style="color:#777;font-size:11px;font-family:'DM Sans',sans-serif">📍 · </span>
+        <span id="t5-date-preview" style="color:#777;font-size:11px;font-family:'DM Sans',sans-serif">📅 </span>
+        <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#ff5c2b">SkopjeVibes</span>
+      </div>
+    </div>
+    <button id="t5-dl-btn" onclick="downloadT5()" style="width:100%;background:#ff5c35;color:#fff;border:none;border-radius:14px;padding:14px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px">⬇ Симни (1080×1080)</button>
   </div>
   <button class="submit-btn" id="ai-btn" onclick="runAiAgent()" style="background:#1a1a2e;border:1px solid #ff5c35;margin-bottom:8px">✨ Пополни форма со AI</button>
   <div class="error-msg" id="ai-error">❌ AI грешка. Обиди се повторно.</div>
@@ -873,24 +885,36 @@
     }
   }
 
-  function openTemplate5(btn) {
-    const MK_DAYS = ['Недела','Понеделник','Вторник','Среда','Четврток','Петок','Сабота'];
+  function openTemplate5() {
+    const file = document.getElementById('ai-image-input').files[0];
     const place = document.getElementById('f-place').value.trim();
-    const time  = document.getElementById('f-vreme').value.trim();
-    const day   = document.getElementById('f-day').value;
+    const time = document.getElementById('f-vreme').value.trim();
+    const day = document.getElementById('f-day').value;
     const month = document.getElementById('f-month').value;
-    const year  = document.getElementById('f-year').value;
-    const dateObj = new Date(`${year}-${month}-${day}T00:00:00`);
-    const dateStr = `${MK_DAYS[dateObj.getDay()]}, ${parseInt(day, 10)} ${MK_MONTHS[parseInt(month, 10) - 1]}`;
-    const img = document.getElementById('ai-preview').src;
+    const MK_MONTHS_LOCAL = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
+    const dateStr = `${parseInt(day)} ${MK_MONTHS_LOCAL[parseInt(month)-1]}`;
+    document.getElementById('t5-loc-preview').textContent = `📍 ${place} · ${time}`;
+    document.getElementById('t5-date-preview').textContent = `📅 ${dateStr}`;
+    if (file) {
+      const url = URL.createObjectURL(file);
+      const bg = document.getElementById('t5-bg');
+      bg.src = url;
+      bg.style.display = 'block';
+      document.getElementById('t5-empty').style.display = 'none';
+    }
+    document.getElementById('t5-preview-wrap').style.display = 'block';
+    document.getElementById('t5-preview-wrap').scrollIntoView({behavior:'smooth'});
+  }
 
-    localStorage.setItem('t5_place', place);
-    localStorage.setItem('t5_time', time);
-    localStorage.setItem('t5_date', dateStr);
-    if (img) localStorage.setItem('t5_img', img);
-
-    window.open('templates.html', '_blank');
-    btn.textContent = '📥 Симни со Template 5';
+  function downloadT5() {
+    const post = document.getElementById('t5-post');
+    const name = document.getElementById('f-title').value.trim().replace(/\s+/g,'-').toLowerCase() || 'event';
+    html2canvas(post, {scale: 1080/post.offsetWidth, useCORS:true}).then(canvas => {
+      const a = document.createElement('a');
+      a.download = `${name}-template5.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    });
   }
 
   function convertImage(type) {
@@ -922,5 +946,6 @@
     img.src = URL.createObjectURL(file);
   }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
