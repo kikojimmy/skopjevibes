@@ -153,6 +153,13 @@
     .leaflet-bar {
       border: 1px solid #2a2a2a !important;
     }
+    .leaflet-tile {
+      filter: none;
+      image-rendering: -webkit-optimize-contrast;
+    }
+    .leaflet-tile-container {
+      image-rendering: pixelated;
+    }
   </style>
 </head>
 <body>
@@ -514,11 +521,13 @@
       zoomControl: true,
       scrollWheelZoom: false,
       attributionControl: false,
+      zoomSnap: 0.5,
     });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       subdomains: 'abcd',
       maxZoom: 19,
+      detectRetina: true,
     }).addTo(map);
 
     markersLayer = L.layerGroup().addTo(map);
