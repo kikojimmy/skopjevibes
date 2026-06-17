@@ -998,7 +998,7 @@
     document.getElementById('t5-edit-time').value  = time;
     document.getElementById('t5-edit-date').value  = dateStr;
 
-    document.getElementById('t5-loc-preview').textContent = `📍 ${place} · ${time}`;
+    document.getElementById('t5-loc-preview').textContent = time ? `📍 ${place} · ${time}` : `📍 ${place}`;
     document.getElementById('t5-date-preview').textContent = `📅 ${dateStr}`;
 
     if (file) {
@@ -1016,7 +1016,7 @@
     const place = document.getElementById('t5-edit-place').value.trim();
     const time = document.getElementById('t5-edit-time').value.trim();
     const date = document.getElementById('t5-edit-date').value.trim();
-    if (place || time) document.getElementById('t5-loc-preview').textContent = `📍 ${place} · ${time}`;
+    if (place || time) document.getElementById('t5-loc-preview').textContent = time ? `📍 ${place} · ${time}` : `📍 ${place}`;
     if (date) document.getElementById('t5-date-preview').textContent = `📅 ${date}`;
   }
 
