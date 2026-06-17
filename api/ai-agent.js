@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
 Read all text visible in the image and extract event data. Always return the venue/place name in Latin script (not Cyrillic). Return ONLY valid JSON, no markdown, no explanation:
 {
-  "title": "event name with a relevant emoji at the start, energetic and catchy",
+  "title": "event name, energetic and catchy, starting with one relevant emoji, with a second emoji placed naturally in the middle or at the end",
   "place": "venue name",
   "kategorija": "klub|koncert|bar|kafana",
   "datum": "YYYY-MM-DD",
@@ -30,7 +30,7 @@ Read all text visible in the image and extract event data. Always return the ven
   "badge": "entry price or free entry info, or empty string",
   "desc": "short engaging description in Macedonian with 1-2 emojis and a hook, max 100 chars",
   "instagramUrl": "instagram URL if visible, else empty string",
-  "caption": "Instagram caption in Macedonian in this EXACT format (no deviations):\n🎸 [hook sentence about the event, no ending punctuation]\n\n📍 [venue] · [time] · [date in Macedonian e.g. 5 Maj]\n📞 Резервации: [phone number if visible, else omit this line entirely]\n\nСите настани 👉 skopjevibes.vercel.app\n\n#skopje #skopjevibes #скопје #skopjenightlife #skopjeevents"
+  "caption": "Instagram caption in Macedonian in this EXACT format (no deviations):\n🎸 [hook sentence about the event starting with one emoji, with a second emoji placed naturally mid-sentence or at the end, no ending punctuation]\n\n📍 [venue] · [time] · [date in Macedonian e.g. 5 Maj]\n📞 Резервации: [phone number if visible, else omit this line entirely]\n\nСите настани 👉 skopjevibes.vercel.app\n\n#skopje #skopjevibes #скопје #skopjenightlife #skopjeevents"
 }
 
 If a field is not found, use empty string. For kategorija, guess from context. For datum, if only day/month visible, use next upcoming date.`;
