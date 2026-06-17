@@ -154,12 +154,11 @@
       border: 1px solid #2a2a2a !important;
     }
     .leaflet-tile {
-      /* 1px overlap eliminates sub-pixel gaps between tiles */
-      width: calc(100% + 1px) !important;
-      height: calc(100% + 1px) !important;
+      filter: none;
+      image-rendering: -webkit-optimize-contrast;
     }
-    .leaflet-tile-pane {
-      will-change: transform;
+    .leaflet-tile-container {
+      image-rendering: pixelated;
     }
   </style>
 </head>
