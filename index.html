@@ -98,7 +98,7 @@
     .sheet-btn:hover { background: #ff4520; }
 
     /* ── Map ── */
-    #event-map { height: 75vh; width: 100%; z-index: 1; }
+    #event-map { height: 75vh; width: 100%; z-index: 1; background: #0d0d0d; }
     .leaflet-popup-content-wrapper { background: #161616 !important; border: 1px solid #2a2a2a !important; border-radius: 14px !important; color: #f5f0e8 !important; box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important; padding: 0 !important; overflow: hidden !important; }
     .leaflet-popup-tip { background: #161616 !important; }
     .leaflet-popup-content { margin: 0 !important; }
@@ -154,11 +154,12 @@
       border: 1px solid #2a2a2a !important;
     }
     .leaflet-tile {
-      filter: none;
-      image-rendering: -webkit-optimize-contrast;
+      /* 1px overlap eliminates sub-pixel gaps between tiles */
+      width: calc(100% + 1px) !important;
+      height: calc(100% + 1px) !important;
     }
-    .leaflet-tile-container {
-      image-rendering: pixelated;
+    .leaflet-tile-pane {
+      will-change: transform;
     }
   </style>
 </head>
