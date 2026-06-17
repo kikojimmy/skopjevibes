@@ -354,6 +354,41 @@
     "Kale":                    { lat: 42.0044,     lng: 21.4248    },
   };
 
+  async function uploadImageToCloudinary(file) {
+    // Convert to 1080x1350 with center crop
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = reject;
+      i.src = URL.createObjectURL(file);
+    });
+
+    const W = 1080, H = 1350;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    const scale = Math.max(W / img.width, H / img.height);
+    const iw = img.width * scale;
+    const ih = img.height * scale;
+    const ix = (W - iw) / 2;
+    const iy = (H - ih) / 2;
+    ctx.drawImage(img, ix, iy, iw, ih);
+
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.93));
+
+    const formData = new FormData();
+    formData.append('file', blob);
+    formData.append('upload_preset', 'skopjevibes');
+    formData.append('folder', 'skopjevibes');
+
+    const res = await fetch('https://api.cloudinary.com/v1_1/dmvqjlvcj/image/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    return data.secure_url;
+  }
+
   function lookupVenueCoords(placeName) {
     if (!placeName) return null;
     const name = placeName.trim().toLowerCase();
@@ -922,6 +957,13 @@
         document.getElementById('f-year').value  = y;
         document.getElementById('f-month').value = m;
         document.getElementById('f-day').value   = d;
+      }
+
+      try {
+        const imgUrl = await uploadImageToCloudinary(file);
+        if (imgUrl) document.getElementById('f-image-url').value = imgUrl;
+      } catch (e) {
+        console.error('Cloudinary upload failed:', e);
       }
 
       document.getElementById('ai-caption-box').style.display = 'block';
