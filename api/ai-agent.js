@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
 Read all text visible in the image and extract event data. Always return the venue/place name in Latin script (not Cyrillic). Return ONLY valid JSON, no markdown, no explanation:
 {
-  "title": "event name",
+  "title": "event name with a relevant emoji at the start, energetic and catchy",
   "place": "venue name",
   "kategorija": "klub|koncert|bar|kafana",
   "datum": "YYYY-MM-DD",
