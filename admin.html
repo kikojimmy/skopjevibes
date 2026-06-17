@@ -987,7 +987,11 @@
     const day = document.getElementById('f-day').value;
     const month = document.getElementById('f-month').value;
     const MK_MONTHS_LOCAL = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
-    const dateStr = `${parseInt(day)} ${MK_MONTHS_LOCAL[parseInt(month)-1]}`;
+    const MK_DAYS_LOCAL = ['Недела','Понеделник','Вторник','Среда','Четврток','Петок','Сабота'];
+    const yearVal = document.getElementById('f-year').value;
+    const dateObj = new Date(`${yearVal}-${month}-${day}T00:00:00`);
+    const dayName = MK_DAYS_LOCAL[dateObj.getDay()];
+    const dateStr = `${dayName}, ${parseInt(day)} ${MK_MONTHS_LOCAL[parseInt(month)-1]}`;
 
     document.getElementById('t5-edit-place').value = place;
     document.getElementById('t5-edit-time').value  = time;
