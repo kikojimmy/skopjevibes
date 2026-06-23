@@ -22,9 +22,6 @@ const CHAT_ID = '8529683964';
 const FIREBASE_API_KEY = 'AIzaSyDOxqfSkmXbRYbMW0ph2aOM-35BDJOAk5E';
 const FIRESTORE_BASE = 'https://firestore.googleapis.com/v1/projects/skopjevibes-df97b/databases/(default)/documents';
 
-function delay(ms) {
-  return new Promise(r => setTimeout(r, ms));
-}
 
 async function getLastSeen(username) {
   try {
@@ -132,37 +129,36 @@ async function getLatestPostId(username) {
   throw new Error('Could not extract post identifier');
 }
 
-module.exports = async (req, res) => {
-  console.log(`[check-venues] Starting — ${VENUES.length} venues, ${new Date().toISOString()}`);
+async function checkVenue(username) {
+  try {
+    console.log(`[${username}] Checking...`);
+    const postId = await getLatestPostId(username);
+    const lastSeen = await getLastSeen(username);
 
-  const results = [];
-
-  for (const username of VENUES) {
-    try {
-      console.log(`[${username}] Checking...`);
-      const postId = await getLatestPostId(username);
-      const lastSeen = await getLastSeen(username);
-
-      if (!lastSeen) {
-        await saveLastSeen(username, postId);
-        console.log(`[${username}] ✅ Initialized: ${postId.slice(0, 24)}`);
-        results.push({ username, status: 'initialized' });
-      } else if (postId !== lastSeen) {
-        await sendTelegram(username);
-        await saveLastSeen(username, postId);
-        console.log(`[${username}] 🔔 NEW POST: ${postId.slice(0, 24)}`);
-        results.push({ username, status: 'new_post' });
-      } else {
-        console.log(`[${username}] ✓ No change`);
-        results.push({ username, status: 'no_change' });
-      }
-    } catch (err) {
-      console.error(`[${username}] ❌ ${err.message}`);
-      results.push({ username, status: 'error', error: err.message });
+    if (!lastSeen) {
+      await saveLastSeen(username, postId);
+      console.log(`[${username}] ✅ Initialized: ${postId.slice(0, 24)}`);
+      return { username, status: 'initialized' };
+    } else if (postId !== lastSeen) {
+      await sendTelegram(username);
+      await saveLastSeen(username, postId);
+      console.log(`[${username}] 🔔 NEW POST: ${postId.slice(0, 24)}`);
+      return { username, status: 'new_post' };
+    } else {
+      console.log(`[${username}] ✓ No change`);
+      return { username, status: 'no_change' };
     }
-
-    await delay(1000);
+  } catch (err) {
+    console.error(`[${username}] ❌ ${err.message}`);
+    return { username, status: 'error', error: err.message };
   }
+}
+
+module.exports = async (req, res) => {
+  console.log(`[check-venues] Starting — ${VENUES.length} venues in parallel, ${new Date().toISOString()}`);
+
+  const settled = await Promise.allSettled(VENUES.map(username => checkVenue(username)));
+  const results = settled.map(s => s.value ?? s.reason);
 
   const summary = {
     checked: results.length,
