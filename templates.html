@@ -27,7 +27,7 @@
   .preview-area { display: flex; justify-content: center; margin-bottom: 20px; }
 
   /* Preview is 540x540 — download renders at 2x = 1080x1080 */
-  .post { width: 540px; height: 540px; position: relative; overflow: hidden; flex-shrink: 0; }
+  .post { width: 540px; height: 540px; position: relative; overflow: hidden; flex-shrink: 0; border-radius: 12px; }
 
   /* Template 1 */
   .t1 { background: #0d0d0d; }
@@ -435,11 +435,21 @@ async function download(postId, btnId, filename) {
       height: 540
     });
 
-    // Ensure output is exactly 1080x1080
+    // Ensure output is exactly 1080x1080 with rounded corners (24px = 12px × 2x scale)
     const out = document.createElement('canvas');
     out.width  = 1080;
     out.height = 1080;
-    out.getContext('2d').drawImage(canvas, 0, 0, 1080, 1080);
+    const ctx = out.getContext('2d');
+    const r = 24;
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.arcTo(1080, 0,    1080, 1080, r);
+    ctx.arcTo(1080, 1080, 0,    1080, r);
+    ctx.arcTo(0,    1080, 0,    0,    r);
+    ctx.arcTo(0,    0,    1080, 0,    r);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(canvas, 0, 0, 1080, 1080);
 
     const link = document.createElement('a');
     link.download = filename;
