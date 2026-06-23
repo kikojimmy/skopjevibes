@@ -408,6 +408,22 @@ async function download(postId, btnId, filename) {
   // Wait for fonts to be ready
   await document.fonts.ready;
 
+  // Wait for any background image inside the post to be fully decoded
+  const img = el.querySelector('img[src]');
+  if (img && img.src) {
+    if (img.complete) {
+      await img.decode().catch(() => {});
+    } else {
+      await new Promise((resolve) => {
+        img.onload = () => img.decode().then(resolve).catch(resolve);
+        img.onerror = resolve;
+      });
+    }
+  }
+
+  // Two rAF ticks so the browser finishes repaint before capture
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
   try {
     const canvas = await html2canvas(el, {
       scale: 2,
