@@ -26,9 +26,8 @@
 
   .preview-area { display: flex; justify-content: center; margin-bottom: 20px; }
 
-  /* T1–T4 preview 540×540, T5 preview 540×675 (4:5). Download renders at 2× */
+  /* All templates preview at 540×540. Download renders at 2× (1080×1080) */
   .post { width: 540px; height: 540px; position: relative; overflow: hidden; flex-shrink: 0; border-radius: 12px; }
-  #post5 { height: 675px; }
 
   /* Template 1 */
   .t1 { background: #0d0d0d; }
@@ -307,7 +306,7 @@
       </div>
     </div>
   </div>
-  <button class="download-btn" id="dl5" onclick="download('post5', 'dl5', 'skopjevibes-datum.png')">⬇ Симни слика (1080×1350)</button>
+  <button class="download-btn" id="dl5" onclick="download('post5', 'dl5', 'skopjevibes-datum.png')">⬇ Симни слика (1080×1080)</button>
 </div>
 
 <script>
