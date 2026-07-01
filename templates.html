@@ -26,8 +26,9 @@
 
   .preview-area { display: flex; justify-content: center; margin-bottom: 20px; }
 
-  /* Preview is 540x540 — download renders at 2x = 1080x1080 */
+  /* T1–T4 preview 540×540, T5 preview 540×675 (4:5). Download renders at 2× */
   .post { width: 540px; height: 540px; position: relative; overflow: hidden; flex-shrink: 0; border-radius: 12px; }
+  #post5 { height: 675px; }
 
   /* Template 1 */
   .t1 { background: #0d0d0d; }
@@ -306,7 +307,7 @@
       </div>
     </div>
   </div>
-  <button class="download-btn" id="dl5" onclick="download('post5', 'dl5', 'skopjevibes-datum.png')">⬇ Симни слика (1080×1080)</button>
+  <button class="download-btn" id="dl5" onclick="download('post5', 'dl5', 'skopjevibes-datum.png')">⬇ Симни слика (1080×1350)</button>
 </div>
 
 <script>
@@ -424,6 +425,12 @@ async function download(postId, btnId, filename) {
   // Two rAF ticks so the browser finishes repaint before capture
   await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
+  // Derive output dimensions from the element so T1–T4 → 1080×1080, T5 → 1080×1350
+  const srcW = el.offsetWidth;
+  const srcH = el.offsetHeight;
+  const outW = srcW * 2;
+  const outH = srcH * 2;
+
   try {
     const canvas = await html2canvas(el, {
       scale: 2,
@@ -431,33 +438,32 @@ async function download(postId, btnId, filename) {
       allowTaint: false,
       backgroundColor: '#0d0d0d',
       logging: false,
-      width:  540,
-      height: 540
+      width:  srcW,
+      height: srcH
     });
 
-    // Ensure output is exactly 1080x1080 with rounded corners (24px = 12px CSS × 2x scale)
+    // Output canvas at 2× with rounded corners (24px = 12px CSS × 2)
     const out = document.createElement('canvas');
-    out.width  = 1080;
-    out.height = 1080;
+    out.width  = outW;
+    out.height = outH;
     const ctx = out.getContext('2d');
 
-    // Step 1: fill background BEFORE clip so antialiased edge pixels blend
-    // against #0d0d0d instead of transparent (which composites as white/cream halo)
+    // Fill background first so antialiased edge pixels blend against #0d0d0d, not white
     ctx.fillStyle = '#0d0d0d';
-    ctx.fillRect(0, 0, 1080, 1080);
+    ctx.fillRect(0, 0, outW, outH);
 
-    // Step 2: apply rounded clip, then draw image over it
+    // Rounded corner clip then draw
     const r = 24;
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(r, 0);
-    ctx.arcTo(1080, 0,    1080, 1080, r);
-    ctx.arcTo(1080, 1080, 0,    1080, r);
-    ctx.arcTo(0,    1080, 0,    0,    r);
-    ctx.arcTo(0,    0,    1080, 0,    r);
+    ctx.arcTo(outW, 0,    outW, outH, r);
+    ctx.arcTo(outW, outH, 0,    outH, r);
+    ctx.arcTo(0,    outH, 0,    0,    r);
+    ctx.arcTo(0,    0,    outW, 0,    r);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(canvas, 0, 0, 1080, 1080);
+    ctx.drawImage(canvas, 0, 0, outW, outH);
     ctx.restore();
 
     const link = document.createElement('a');
