@@ -435,12 +435,20 @@ async function download(postId, btnId, filename) {
       height: 540
     });
 
-    // Ensure output is exactly 1080x1080 with rounded corners (24px = 12px × 2x scale)
+    // Ensure output is exactly 1080x1080 with rounded corners (24px = 12px CSS × 2x scale)
     const out = document.createElement('canvas');
     out.width  = 1080;
     out.height = 1080;
     const ctx = out.getContext('2d');
+
+    // Step 1: fill background BEFORE clip so antialiased edge pixels blend
+    // against #0d0d0d instead of transparent (which composites as white/cream halo)
+    ctx.fillStyle = '#0d0d0d';
+    ctx.fillRect(0, 0, 1080, 1080);
+
+    // Step 2: apply rounded clip, then draw image over it
     const r = 24;
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(r, 0);
     ctx.arcTo(1080, 0,    1080, 1080, r);
@@ -450,6 +458,7 @@ async function download(postId, btnId, filename) {
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(canvas, 0, 0, 1080, 1080);
+    ctx.restore();
 
     const link = document.createElement('a');
     link.download = filename;
